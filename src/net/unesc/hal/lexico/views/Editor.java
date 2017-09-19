@@ -1,6 +1,15 @@
 package net.unesc.hal.lexico.views;
 
+import java.awt.Color;
+import java.awt.Font;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+import javax.swing.UnsupportedLookAndFeelException;
+import javax.swing.plaf.ColorUIResource;
+import net.unesc.hal.lexico.utils.TextLineNumber;
+import net.unesc.hal.lexico.utils.TextPanelHighLight;
 
 /**
  *
@@ -8,21 +17,58 @@ import javax.swing.ImageIcon;
  */
 public class Editor extends javax.swing.JFrame {
 
-    public Editor() {
+    public Editor() throws ClassNotFoundException, InstantiationException, IllegalAccessException, UnsupportedLookAndFeelException {
         this.setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
+        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         initComponents();
+        initEditor();        
+    }
+    
+    private void initEditor(){
+        fieldEditor = new TextPanelHighLight();
+        spEditor = new javax.swing.JScrollPane(fieldEditor);
+        txtLineNumber = new TextLineNumber(fieldEditor);
+        
+        spEditor.setBorder(null);
+        
+        fieldEditor.setBackground(new java.awt.Color(7, 54, 66));
+        fieldEditor.setBorder(null);
+        fieldEditor.setFont(new java.awt.Font("Monospaced", 0, 14));
+        fieldEditor.setForeground(new java.awt.Color(252, 252, 250));
+        fieldEditor.setName("");
+        fieldEditor.setText("function");
+        
+        
+        txtLineNumber.setBorderGap(8);
+        txtLineNumber.setUpdateFont(true);
+        txtLineNumber.setBackground(new java.awt.Color(0, 43, 54));
+        txtLineNumber.setFont(new java.awt.Font("Monospaced", 0, 14));
+        txtLineNumber.setForeground(new java.awt.Color(252, 252, 250));
+        txtLineNumber.setCurrentLineForeground(new java.awt.Color(252, 252, 250));
+        
+ 
+        spEditor.setRowHeaderView(txtLineNumber);
+        
+        pnEditor.add(spEditor);
+        
+        tpContainer.setBackgroundAt(0, Color.white);
+        
     }
 
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
+        java.awt.GridBagConstraints gridBagConstraints;
 
         MainPanel = new javax.swing.JPanel();
-        spEditor = new javax.swing.JScrollPane();
-        fieldEditor = new javax.swing.JEditorPane();
+        pnEditor = new javax.swing.JPanel();
+        pnDebug = new javax.swing.JPanel();
+        divider = new javax.swing.JSeparator();
         tpContainer = new javax.swing.JTabbedPane();
-        tpLexicoDebug = new javax.swing.JTabbedPane();
-        tpLexicoBugs = new javax.swing.JTabbedPane();
+        spAnaliseLexicaDebug = new javax.swing.JScrollPane();
+        tbAnaliseLexica = new javax.swing.JTable();
+        spErros = new javax.swing.JScrollPane();
+        tbErros = new javax.swing.JTable();
         mnBar = new javax.swing.JMenuBar();
         mnArquivo = new javax.swing.JMenu();
         smNovo = new javax.swing.JMenuItem();
@@ -37,49 +83,121 @@ public class Editor extends javax.swing.JFrame {
         setTitle("H.A.L. - Analisador Léxico");
         setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
-        getContentPane().setLayout(new java.awt.GridLayout());
+        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        MainPanel.setLayout(new java.awt.GridLayout(2, 0, 0, 10));
+        MainPanel.setBackground(new java.awt.Color(253, 246, 227));
+        MainPanel.setLayout(new java.awt.GridLayout(2, 0));
 
-        fieldEditor.setMinimumSize(new java.awt.Dimension(10, 10));
-        fieldEditor.setName(""); // NOI18N
-        fieldEditor.setPreferredSize(new java.awt.Dimension(10, 10));
-        spEditor.setViewportView(fieldEditor);
+        pnEditor.setOpaque(false);
+        pnEditor.setLayout(new java.awt.GridLayout());
+        MainPanel.add(pnEditor);
 
-        MainPanel.add(spEditor);
+        pnDebug.setLayout(new javax.swing.BoxLayout(pnDebug, javax.swing.BoxLayout.Y_AXIS));
 
-        tpContainer.addTab("Análise léxica", tpLexicoDebug);
-        tpContainer.addTab("Erros", tpLexicoBugs);
+        divider.setBackground(new java.awt.Color(0, 43, 54));
+        divider.setForeground(new java.awt.Color(0, 43, 54));
+        divider.setMaximumSize(new java.awt.Dimension(3000, 3000));
+        divider.setName(""); // NOI18N
+        divider.setPreferredSize(new java.awt.Dimension(3, 3));
+        divider.setVerifyInputWhenFocusTarget(false);
+        pnDebug.add(divider);
 
-        MainPanel.add(tpContainer);
+        spAnaliseLexicaDebug.setBorder(null);
+
+        tbAnaliseLexica.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spAnaliseLexicaDebug.setViewportView(tbAnaliseLexica);
+
+        tpContainer.addTab("Análise léxica", spAnaliseLexicaDebug);
+
+        spErros.setBorder(null);
+
+        tbErros.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Title 1", "Title 2", "Title 3", "Title 4"
+            }
+        ));
+        spErros.setViewportView(tbErros);
+
+        tpContainer.addTab("Erros", spErros);
+
+        pnDebug.add(tpContainer);
+
+        MainPanel.add(pnDebug);
 
         getContentPane().add(MainPanel);
 
+        mnBar.setBackground(new java.awt.Color(0, 43, 54));
+        mnBar.setBorder(null);
+        mnBar.setToolTipText("");
+        mnBar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
+        mnBar.setPreferredSize(new java.awt.Dimension(104, 25));
+
         mnArquivo.setText("Arquivo");
+        mnArquivo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         smNovo.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
+        smNovo.setBackground(new java.awt.Color(7, 54, 66));
         smNovo.setText("Novo");
+        smNovo.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smNovo.setIconTextGap(8);
+        smNovo.setPreferredSize(new java.awt.Dimension(120, 30));
         mnArquivo.add(smNovo);
 
         smAbrir.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
+        smAbrir.setBackground(new java.awt.Color(7, 54, 66));
         smAbrir.setText("Abrir");
+        smAbrir.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smAbrir.setIconTextGap(8);
+        smAbrir.setPreferredSize(new java.awt.Dimension(120, 30));
         mnArquivo.add(smAbrir);
 
         smSalvar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
+        smSalvar.setBackground(new java.awt.Color(7, 54, 66));
         smSalvar.setText("Salvar");
+        smSalvar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smSalvar.setIconTextGap(8);
+        smSalvar.setPreferredSize(new java.awt.Dimension(120, 30));
         mnArquivo.add(smSalvar);
         mnArquivo.add(smSeparador);
 
         smFechar.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
+        smFechar.setBackground(new java.awt.Color(7, 54, 66));
         smFechar.setText("Fechar");
+        smFechar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smFechar.setIconTextGap(8);
+        smFechar.setPreferredSize(new java.awt.Dimension(120, 30));
         mnArquivo.add(smFechar);
 
         mnBar.add(mnArquivo);
 
         mnExecutar.setText("Executar");
+        mnExecutar.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         smRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.CTRL_MASK));
+        smRun.setBackground(new java.awt.Color(7, 54, 66));
         smRun.setText("Analisador léxico");
+        smRun.setBorder(null);
+        smRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smRun.setDoubleBuffered(true);
+        smRun.setIconTextGap(8);
+        smRun.setPreferredSize(new java.awt.Dimension(177, 30));
+        smRun.setRequestFocusEnabled(false);
         smRun.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
                 smRunActionPerformed(evt);
@@ -132,26 +250,42 @@ public class Editor extends javax.swing.JFrame {
         /* Create and display the form */
         java.awt.EventQueue.invokeLater(new Runnable() {
             public void run() {
-                new Editor().setVisible(true);
+                try {
+                    new Editor().setVisible(true);
+                } catch (ClassNotFoundException ex) {
+                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (InstantiationException ex) {
+                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (IllegalAccessException ex) {
+                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+                } catch (UnsupportedLookAndFeelException ex) {
+                    Logger.getLogger(Editor.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
     }
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
-    private javax.swing.JEditorPane fieldEditor;
+    private javax.swing.JSeparator divider;
     private javax.swing.JMenu mnArquivo;
     private javax.swing.JMenuBar mnBar;
     private javax.swing.JMenu mnExecutar;
+    private javax.swing.JPanel pnDebug;
+    private javax.swing.JPanel pnEditor;
     private javax.swing.JMenuItem smAbrir;
     private javax.swing.JMenuItem smFechar;
     private javax.swing.JMenuItem smNovo;
     private javax.swing.JMenuItem smRun;
     private javax.swing.JMenuItem smSalvar;
     private javax.swing.JPopupMenu.Separator smSeparador;
-    private javax.swing.JScrollPane spEditor;
+    private javax.swing.JScrollPane spAnaliseLexicaDebug;
+    private javax.swing.JScrollPane spErros;
+    private javax.swing.JTable tbAnaliseLexica;
+    private javax.swing.JTable tbErros;
     private javax.swing.JTabbedPane tpContainer;
-    private javax.swing.JTabbedPane tpLexicoBugs;
-    private javax.swing.JTabbedPane tpLexicoDebug;
     // End of variables declaration//GEN-END:variables
+    private javax.swing.JEditorPane fieldEditor;
+    private javax.swing.JScrollPane spEditor;
+    private net.unesc.hal.lexico.utils.TextLineNumber txtLineNumber;
 }
