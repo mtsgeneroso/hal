@@ -3,6 +3,7 @@ package net.unesc.hal.lexico.views;
 import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import net.unesc.hal.lexico.controllers.FiniteAutomaton;
 import net.unesc.hal.lexico.data.Source;
 import net.unesc.hal.lexico.listeners.EditorListener;
 import net.unesc.hal.lexico.utils.TextLineNumber;
@@ -20,12 +21,18 @@ public class Editor extends javax.swing.JFrame {
     public static final String NEW = "Novo";
     public static final String LEXICON = "Analisador léxico";
     
+    private FiniteAutomaton fa;
+    
     public Editor() {
         initComponents();
         initEditor();
         initListener();
         
         runTest();
+    }
+    
+    public FiniteAutomaton getFiniteAutomaton(){
+        return fa;
     }
     
     public Source getSource() {
@@ -42,7 +49,7 @@ public class Editor extends javax.swing.JFrame {
     
     private void runTest(){
         fieldEditor.setText("function nomeFuncao(){\n"
-                            + "    var #var;\n"
+                            + "    var #var1;\n"
                             + "}");
         smRun.doClick();
     }
@@ -58,9 +65,10 @@ public class Editor extends javax.swing.JFrame {
     }
     
     private void initEditor(){       
+        fa = new FiniteAutomaton("HAL");
+        
         setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
         
-
         fieldEditor = new TextPanelHighLight();
         spEditor = new javax.swing.JScrollPane(fieldEditor);
         txtLineNumber = new TextLineNumber(fieldEditor);
@@ -87,7 +95,8 @@ public class Editor extends javax.swing.JFrame {
         tpContainer.setBackgroundAt(0, Color.white);
         
     }
-
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {

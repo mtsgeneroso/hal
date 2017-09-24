@@ -1,5 +1,8 @@
 package net.unesc.hal.lexico.data;
 
+import java.util.ArrayList;
+import net.unesc.hal.lexico.data.Character;
+
 public class Source {
     
     private String code;
@@ -19,6 +22,25 @@ public class Source {
     @Override
     public String toString() {
         return "Source{" + "code=" + code + '}';
+    }
+
+    public ArrayList<Character> getChars() {
+        ArrayList<Character> chars = new ArrayList<>();
+        
+        String[] rows = code.split("\n");
+        
+        for(int i = 0; i < rows.length; i++){
+            
+            String[] cols = rows[i].split("");
+            
+            for(int j = 0; j < cols.length; j++){                
+                chars.add(new Character(cols[j]));
+            }
+            
+            chars.add(new Character(Character.EOL));
+        }
+        chars.add(new Character(Character.EOF));
+        return chars;
     }
     
     

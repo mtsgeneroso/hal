@@ -42,7 +42,7 @@ public class EditorListener implements ActionListener {
             case Editor.LEXICON:
                 
                 Source src = ed.getSource();
-                Lexicon lex = new Lexicon(src);
+                Lexicon lex = new Lexicon(src, ed.getFiniteAutomaton());
                 ed.setTokens(lex.getTokens());
                 ed.setErrors(lex.getErrors());
                 
