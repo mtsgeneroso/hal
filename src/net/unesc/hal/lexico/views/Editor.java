@@ -39,18 +39,36 @@ public class Editor extends javax.swing.JFrame {
         return new Source(fieldEditor.getText());
     }
     
-    public void setTokens(ArrayList<String[]> tokens) {
+    public void setTokens(ArrayList<ArrayList<String>> tokens) {
         // TODO: Poupulate Tokens table
     }
     
-    public void setErrors(ArrayList<String[]> tokens) {
+    public void setErrors(ArrayList<ArrayList<String>> tokens) {
         // TODO: Poupulate Errors table
     }
     
     private void runTest(){
-        fieldEditor.setText("function nomeFuncao(){\n"
-                            + "    var #var1;\n"
-                            + "}");
+        fieldEditor.setText("void main {\n" +
+                            "    #var1: int;\n" +
+                            "    #var2, #var3, #var4: float;\n" +
+                            "    \n" +
+                            "    int #var5 ( int ; float ) {\n" +
+                            "        #var6: int;\n" +
+                            "        float #var7 {\n" +
+                            "            inicio\n" +
+                            "                cout << #var7;\n" +
+                            "            fim\n" +
+                            "            return (#var7)\n" +
+                            "        };\n" +
+                            "        inicio\n" +
+                            "            cout << #var6 ;\n" +
+                            "        fim\n" +
+                            "        return (#var6)\n" +
+                            "    };\n" +
+                            "    inicio\n" +
+                            "        cin  >> #var1;\n" +
+                            "    fim\n" +
+                            "}");
         smRun.doClick();
     }
     

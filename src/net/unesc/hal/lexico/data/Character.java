@@ -7,9 +7,7 @@ public class Character {
     private String character;
     private boolean num;
     private boolean letter;
-    private boolean dot;
     private boolean space;
-    private boolean semicolon;
     private boolean endFile;
     private boolean endLine;
 
@@ -20,8 +18,6 @@ public class Character {
     
     private void setProperties(){
         space = character.equals(" ");
-        dot = character.equals(".");
-        semicolon = character.equals(";");
         endFile = character.equals(EOF);
         endLine = character.equals(EOL);
         num = character.matches("[0-9]");
@@ -44,16 +40,8 @@ public class Character {
         return letter;
     }
 
-    public boolean isDot() {
-        return dot;
-    }
-
     public boolean isEndFile() {
         return endFile;
-    }
-
-    public boolean isSemicolon() {
-        return semicolon;
     }
 
     public boolean isEndLine() {
@@ -66,7 +54,7 @@ public class Character {
 
     @Override
     public String toString() {
-        return "Character{" + "character=" + character + ", num=" + num + ", letter=" + letter + ", dot=" + dot + ", space=" + space + ", endFile=" + endFile + ", endLine=" + endLine + '}';
+        return "Character{" + "character=" + character + ", num=" + num + ", letter=" + letter + ", space=" + space + ", endFile=" + endFile + ", endLine=" + endLine + '}';
     }
     
 }

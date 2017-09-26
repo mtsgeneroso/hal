@@ -8,29 +8,30 @@ import net.unesc.hal.lexico.data.Character;
 public class Lexicon {
     
     private final Source src;
-    private ArrayList<String[]> tokens;
-    private ArrayList<String[]> errors;
+    private FiniteAutomaton fa;
+    private ArrayList<ArrayList<String>> tokens;
+    private ArrayList<ArrayList<String>> errors;
 
     public Lexicon(Source src, FiniteAutomaton fa) {
         this.src = src;
-        checkLexicon();
+        this.fa = fa;
+        buildLexicon();
     }
 
-    public ArrayList<String[]> getTokens() {
+    public ArrayList<ArrayList<String>> getTokens() {
         return tokens;
     }
 
-    public ArrayList<String[]> getErrors() {
+    public ArrayList<ArrayList<String>> getErrors() {
         return errors;
     }
     
-    private void checkLexicon(){
+    private void buildLexicon(){
         ArrayList<Character> chars = src.getChars();
+        ArrayList<ArrayList<String>> res = fa.checkLang(chars);
         
-        for(Character c : chars){
-            // TODO: Enviar partes da string até dar match (fim) no automato
-            // fa.validate(str);
-            System.out.println(c.toString());
+        for(ArrayList<String> line : res){
+            System.out.println(line.get(0) + " : " + line.get(1) + " : " + line.get(2));
         }
     }
     
