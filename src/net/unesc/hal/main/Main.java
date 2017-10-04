@@ -1,6 +1,6 @@
-package net.unesc.hal.lexico.main;
+package net.unesc.hal.main;
 
-import net.unesc.hal.lexico.views.Editor;
+import net.unesc.hal.views.Editor;
 
 public class Main {
     public static void main(String[] args) {

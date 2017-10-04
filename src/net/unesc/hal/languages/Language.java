@@ -1,4 +1,4 @@
-package net.unesc.hal.lexico.languages;
+package net.unesc.hal.languages;
 
 public interface Language {
     public int getToken(String str);

@@ -1,4 +1,4 @@
-package net.unesc.hal.lexico.utils;
+package net.unesc.hal.utils;
 
 import java.awt.*;
 import java.awt.event.*;

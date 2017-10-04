@@ -3,7 +3,7 @@
  * To change this template file, choose Tools | Templates
  * and open the template in the editor.
  */
-package net.unesc.hal.lexico.utils;
+package net.unesc.hal.utils;
 
 import java.awt.Color;
 import java.awt.Graphics;
