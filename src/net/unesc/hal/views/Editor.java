@@ -1,10 +1,10 @@
 package net.unesc.hal.views;
 
-import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import net.unesc.hal.controllers.FiniteAutomaton;
 import net.unesc.hal.data.Source;
+import net.unesc.hal.languages.HAL;
 import net.unesc.hal.listeners.EditorListener;
 import net.unesc.hal.utils.TextLineNumber;
 import net.unesc.hal.utils.TextPanelHighLight;
@@ -19,7 +19,7 @@ public class Editor extends javax.swing.JFrame {
     public static final String OPEN = "Abrir";
     public static final String CLOSE = "Fechar";
     public static final String NEW = "Novo";
-    public static final String LEXICON = "Analisador léxico";
+    public static final String LEXICON = "Léxico";
     
     private FiniteAutomaton fa;
     
@@ -27,8 +27,6 @@ public class Editor extends javax.swing.JFrame {
         initComponents();
         initEditor();
         initListener();
-        
-        runTest();
     }
     
     public FiniteAutomaton getFiniteAutomaton(){
@@ -39,42 +37,19 @@ public class Editor extends javax.swing.JFrame {
         return new Source(fieldEditor.getText());
     }
     
-    public void setTokens(ArrayList<ArrayList<String>> tokens) {
+    public void setTokens(ArrayList<String[]> tokens) {
         // TODO: Poupulate Tokens table
     }
     
-    public void setErrors(ArrayList<ArrayList<String>> tokens) {
+    public void setErrors(ArrayList<String[]> tokens) {
         // TODO: Poupulate Errors table
-    }
-    
-    private void runTest(){
-        fieldEditor.setText("void main {\n" +
-                            "    #var1: int;\n" +
-                            "    #var2, #var3, #var4: float;\n" +
-                            "    \n" +
-                            "    int #var5 ( int ; float ) {\n" +
-                            "        #var6: int;\n" +
-                            "        float #var7 {\n" +
-                            "            inicio\n" +
-                            "                cout << #var7;\n" +
-                            "            fim\n" +
-                            "            return (#var7)\n" +
-                            "        };\n" +
-                            "        inicio\n" +
-                            "            cout << #var6 ;\n" +
-                            "        fim\n" +
-                            "        return (#var6)\n" +
-                            "    };\n" +
-                            "    inicio\n" +
-                            "        cin  >> #var1;\n" +
-                            "    fim\n" +
-                            "}");
-        smRun.doClick();
+        System.out.println("Foi");
+        pnErrors.setVisible(true);
     }
     
     private void initListener(){
         EditorListener el = new EditorListener(this);
-        smRun.addActionListener(el);
+        smRunLexicon.addActionListener(el);
         smNew.addActionListener(el);
         smOpen.addActionListener(el);
         smSave.addActionListener(el);
@@ -83,7 +58,7 @@ public class Editor extends javax.swing.JFrame {
     }
     
     private void initEditor(){       
-        fa = new FiniteAutomaton("HAL");
+        fa = new FiniteAutomaton(new HAL());
         
         setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
         
@@ -109,8 +84,7 @@ public class Editor extends javax.swing.JFrame {
         spEditor.setRowHeaderView(txtLineNumber);
         
         pnEditor.add(spEditor);
-        
-        tpContainer.setBackgroundAt(0, Color.white);
+        pnErrors.setVisible(false);
         
     }
     
@@ -122,12 +96,12 @@ public class Editor extends javax.swing.JFrame {
         MainPanel = new javax.swing.JPanel();
         pnEditor = new javax.swing.JPanel();
         pnDebug = new javax.swing.JPanel();
-        divider = new javax.swing.JSeparator();
-        tpContainer = new javax.swing.JTabbedPane();
-        spAnaliseLexicaDebug = new javax.swing.JScrollPane();
-        tbAnaliseLexica = new javax.swing.JTable();
-        spErros = new javax.swing.JScrollPane();
-        tbErros = new javax.swing.JTable();
+        pnAnalysis = new javax.swing.JPanel();
+        spAnalysisDebug = new javax.swing.JScrollPane();
+        tbAnalysis = new javax.swing.JTable();
+        pnErrors = new javax.swing.JPanel();
+        spErrors = new javax.swing.JScrollPane();
+        txaErrors = new javax.swing.JTextArea();
         mnBar = new javax.swing.JMenuBar();
         mnFile = new javax.swing.JMenu();
         smNew = new javax.swing.JMenuItem();
@@ -136,66 +110,95 @@ public class Editor extends javax.swing.JFrame {
         smDivider = new javax.swing.JPopupMenu.Separator();
         smClose = new javax.swing.JMenuItem();
         mnRunner = new javax.swing.JMenu();
-        smRun = new javax.swing.JMenuItem();
+        smRunLexicon = new javax.swing.JMenuItem();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
-        setTitle("H.A.L. - Analisador Léxico");
+        setTitle("H.A.L. - Analisador");
         setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        MainPanel.setBackground(new java.awt.Color(253, 246, 227));
-        MainPanel.setLayout(new java.awt.GridLayout(2, 0));
+        MainPanel.setBackground(new java.awt.Color(0, 43, 54));
+        MainPanel.setLayout(new java.awt.GridLayout(1, 2));
 
         pnEditor.setOpaque(false);
         pnEditor.setLayout(new java.awt.GridLayout(1, 0));
         MainPanel.add(pnEditor);
 
+        pnDebug.setBackground(new java.awt.Color(0, 43, 54));
         pnDebug.setLayout(new javax.swing.BoxLayout(pnDebug, javax.swing.BoxLayout.Y_AXIS));
 
-        divider.setBackground(new java.awt.Color(0, 43, 54));
-        divider.setForeground(new java.awt.Color(0, 43, 54));
-        divider.setMaximumSize(new java.awt.Dimension(3000, 3000));
-        divider.setName(""); // NOI18N
-        divider.setPreferredSize(new java.awt.Dimension(3, 3));
-        divider.setVerifyInputWhenFocusTarget(false);
-        pnDebug.add(divider);
+        pnAnalysis.setBackground(new java.awt.Color(0, 43, 54));
+        pnAnalysis.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Resultado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        pnAnalysis.setToolTipText("");
+        pnAnalysis.setLayout(new javax.swing.BoxLayout(pnAnalysis, javax.swing.BoxLayout.LINE_AXIS));
 
-        spAnaliseLexicaDebug.setBorder(null);
+        spAnalysisDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spAnalysisDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        tbAnaliseLexica.setModel(new javax.swing.table.DefaultTableModel(
+        tbAnalysis.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tbAnalysis.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tbAnalysis.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
+                {null, null, null}
             },
             new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+                "Linha", "Código", "Token"
             }
-        ));
-        spAnaliseLexicaDebug.setViewportView(tbAnaliseLexica);
+        ) {
+            Class[] types = new Class [] {
+                java.lang.Integer.class, java.lang.Integer.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false
+            };
 
-        tpContainer.addTab("Análise léxica", spAnaliseLexicaDebug);
-
-        spErros.setBorder(null);
-
-        tbErros.setModel(new javax.swing.table.DefaultTableModel(
-            new Object [][] {
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null},
-                {null, null, null, null}
-            },
-            new String [] {
-                "Title 1", "Title 2", "Title 3", "Title 4"
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
             }
-        ));
-        spErros.setViewportView(tbErros);
 
-        tpContainer.addTab("Erros", spErros);
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbAnalysis.setGridColor(new java.awt.Color(204, 204, 204));
+        tbAnalysis.getTableHeader().setReorderingAllowed(false);
+        spAnalysisDebug.setViewportView(tbAnalysis);
+        if (tbAnalysis.getColumnModel().getColumnCount() > 0) {
+            tbAnalysis.getColumnModel().getColumn(0).setResizable(false);
+            tbAnalysis.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tbAnalysis.getColumnModel().getColumn(1).setResizable(false);
+            tbAnalysis.getColumnModel().getColumn(1).setPreferredWidth(5);
+            tbAnalysis.getColumnModel().getColumn(2).setResizable(false);
+        }
 
-        pnDebug.add(tpContainer);
+        pnAnalysis.add(spAnalysisDebug);
+
+        pnDebug.add(pnAnalysis);
+
+        pnErrors.setBackground(new java.awt.Color(0, 43, 54));
+        pnErrors.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Erro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        pnErrors.setMinimumSize(new java.awt.Dimension(35, 50));
+        pnErrors.setPreferredSize(new java.awt.Dimension(100, 150));
+        pnErrors.setRequestFocusEnabled(false);
+        pnErrors.setLayout(new javax.swing.BoxLayout(pnErrors, javax.swing.BoxLayout.PAGE_AXIS));
+
+        spErrors.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spErrors.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spErrors.setPreferredSize(new java.awt.Dimension(168, 100));
+        spErrors.setRequestFocusEnabled(false);
+
+        txaErrors.setColumns(20);
+        txaErrors.setRows(5);
+        txaErrors.setEnabled(false);
+        txaErrors.setFocusable(false);
+        txaErrors.setPreferredSize(new java.awt.Dimension(164, 100));
+        txaErrors.setRequestFocusEnabled(false);
+        spErrors.setViewportView(txaErrors);
+
+        pnErrors.add(spErrors);
+
+        pnDebug.add(pnErrors);
 
         MainPanel.add(pnDebug);
 
@@ -246,20 +249,20 @@ public class Editor extends javax.swing.JFrame {
         mnRunner.setText("Executar");
         mnRunner.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
-        smRun.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.CTRL_MASK));
-        smRun.setText("Analisador léxico");
-        smRun.setBorder(null);
-        smRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
-        smRun.setDoubleBuffered(true);
-        smRun.setIconTextGap(8);
-        smRun.setPreferredSize(new java.awt.Dimension(177, 30));
-        smRun.setRequestFocusEnabled(false);
-        smRun.addActionListener(new java.awt.event.ActionListener() {
+        smRunLexicon.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.CTRL_MASK));
+        smRunLexicon.setText("Léxico");
+        smRunLexicon.setBorder(null);
+        smRunLexicon.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smRunLexicon.setDoubleBuffered(true);
+        smRunLexicon.setIconTextGap(8);
+        smRunLexicon.setPreferredSize(new java.awt.Dimension(177, 30));
+        smRunLexicon.setRequestFocusEnabled(false);
+        smRunLexicon.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                smRunActionPerformed(evt);
+                smRunLexiconActionPerformed(evt);
             }
         });
-        mnRunner.add(smRun);
+        mnRunner.add(smRunLexicon);
 
         mnBar.add(mnRunner);
 
@@ -270,31 +273,31 @@ public class Editor extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void smRunActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smRunActionPerformed
+    private void smRunLexiconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smRunLexiconActionPerformed
         
-        String[] code = fieldEditor.getText().split("\n");
         
-    }//GEN-LAST:event_smRunActionPerformed
+        
+    }//GEN-LAST:event_smRunLexiconActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JPanel MainPanel;
-    private javax.swing.JSeparator divider;
     private javax.swing.JMenuBar mnBar;
     private javax.swing.JMenu mnFile;
     private javax.swing.JMenu mnRunner;
+    private javax.swing.JPanel pnAnalysis;
     private javax.swing.JPanel pnDebug;
     private javax.swing.JPanel pnEditor;
+    private javax.swing.JPanel pnErrors;
     private javax.swing.JMenuItem smClose;
     private javax.swing.JPopupMenu.Separator smDivider;
     private javax.swing.JMenuItem smNew;
     private javax.swing.JMenuItem smOpen;
-    private javax.swing.JMenuItem smRun;
+    private javax.swing.JMenuItem smRunLexicon;
     private javax.swing.JMenuItem smSave;
-    private javax.swing.JScrollPane spAnaliseLexicaDebug;
-    private javax.swing.JScrollPane spErros;
-    private javax.swing.JTable tbAnaliseLexica;
-    private javax.swing.JTable tbErros;
-    private javax.swing.JTabbedPane tpContainer;
+    private javax.swing.JScrollPane spAnalysisDebug;
+    private javax.swing.JScrollPane spErrors;
+    private javax.swing.JTable tbAnalysis;
+    private javax.swing.JTextArea txaErrors;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JEditorPane fieldEditor;
     private javax.swing.JScrollPane spEditor;

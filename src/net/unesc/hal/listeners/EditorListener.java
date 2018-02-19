@@ -26,6 +26,10 @@ public class EditorListener implements ActionListener {
     }
 
     private void speak(String cmd) throws EditorException {
+        Source src = ed.getSource();
+        
+        if(src == null || src.getCode().isEmpty()) return;
+            
         switch (cmd) {
             case Editor.SAVE:
                 // Save file
@@ -40,16 +44,13 @@ public class EditorListener implements ActionListener {
                 // New file
                 break;
             case Editor.LEXICON:
-                
-                Source src = ed.getSource();
+                // Lexicon Analysis
                 Lexicon lex = new Lexicon(src, ed.getFiniteAutomaton());
                 ed.setTokens(lex.getTokens());
                 ed.setErrors(lex.getErrors());
-                
                 break;
             default:
-                System.out.println(cmd);
-                throw new EditorException("Command of editor menu is undefined!");
+                throw new EditorException("Unknown command!: " + cmd);
         }
 
     }

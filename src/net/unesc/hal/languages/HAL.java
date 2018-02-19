@@ -1,103 +1,100 @@
 package net.unesc.hal.languages;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import net.unesc.hal.data.Token;
 
 public class HAL implements Language {
     
-    public final Integer COMMENT_BLOCK_BEGIN = 48;
-    public final Integer COMMENT_BLOCK_END = 49;
-    public final Integer COMMENT_INLINE = 50;
-    public final Integer STRING_BEGIN = 51;
-    public final Integer STRING_END = 52;
-    public final Integer CHAR_BEGIN = 53;
-    public final Integer CHAR_END = 54;
-    public final Integer LITERAL_BEGIN = 55;
-    public final Integer LITERAL_END = 56;
+    public final String COMMENT_BLOCK_BEGIN = "|+";
+    public final String COMMENT_BLOCK_END = "+|";
+    public final String COMMENT_INLINE = "||";
+    public final String STRING_BEGIN = "@";
+    public final String STRING_END = "@";
+    public final String CHAR_BEGIN = "\'";
+    public final String CHAR_END =  "\'";
+    public final String LITERAL_BEGIN = "&";
+    public final String LITERAL_END = "&";
+    public final String DECIMAL_MARK = ",";
     
-    public Map<Integer, String> tokens;
+    public final Token VAR_NAME = new Token(7, "nomevariavel");
+    public final Token VAR_INTEGER = new Token(5, "numerointeiro");
+    public final Token VAR_FLOAT = new Token(6, "numerofloat");
+    public final Token VAR_CHAR = new Token(8, "nomedochar");
+    public final Token VAR_STRING = new Token(9, "nomedastring");  
+    
+    public final Token EOF = new Token(44, "$");    
+    public final Token EMPTY = new Token(15, "î"); 
+    
+    public ArrayList<Token> tokens;
 
     public HAL() {
         buildTokens();
     }
 
     @Override
-    public int getToken(String str){
-        if(!tokens.containsValue(str)) return -1;
-            
+    public Token getToken(String str){
+        
         for(int i = 1; i <= tokens.size(); i++){
-            if(str.equals(tokens.get(i)))
-                return i;
+            if(str.equals(tokens.get(i).getName()))
+                return tokens.get(i);
         } 
         
-        return -1;
+        return null;
     }
 
     @Override
-    public String getToken(Integer cod) {
-        if(tokens.containsKey(cod))
-            return tokens.get(cod);
+    public Token getToken(Integer cod) {
+            
+        for(int i = 1; i <= tokens.size(); i++){
+            if(cod.equals(tokens.get(i).getCode()))
+                return tokens.get(i);
+        } 
+        
         return null;
     }
     
     private void buildTokens(){
-        tokens = new HashMap<Integer, String>();
-        tokens.put(1,"while");
-        tokens.put(2,"void");
-        tokens.put(3,"string");
-        tokens.put(4,"return");
-        tokens.put(5,"numerointeiro");
-        tokens.put(6,"numerofloat");
-        tokens.put(7,"nomevariavel");
-        tokens.put(8,"nomedochar");
-        tokens.put(9,"nomedastring");
-        tokens.put(10,"main");
-        tokens.put(11,"literal");
-        tokens.put(12,"integer");
-        tokens.put(13,"inicio");
-        tokens.put(14,"if");
-        tokens.put(15,"î");
-        tokens.put(16,"for");
-        tokens.put(17,"float");
-        tokens.put(18,"fim");
-        tokens.put(19,"else");
-        tokens.put(20,"do");
-        tokens.put(21,"cout");
-        tokens.put(22,"cin");
-        tokens.put(23,"char");
-        tokens.put(24,"callfuncao");
-        tokens.put(25,">>");
-        tokens.put(26,">=");
-        tokens.put(27,">");
-        tokens.put(28,"==");
-        tokens.put(29,"=");
-        tokens.put(30,"<=");
-        tokens.put(31,"<<");
-        tokens.put(32,"<");
-        tokens.put(33,"++");
-        tokens.put(34,"+");
-        tokens.put(35,"}");
-        tokens.put(36,"{");
-        tokens.put(37,";");
-        tokens.put(38,":");
-        tokens.put(39,"/");
-        tokens.put(40,",");
-        tokens.put(41,"*");
-        tokens.put(42,")");
-        tokens.put(43,"(");
-        tokens.put(44,"$");
-        tokens.put(45,"!=");
-        tokens.put(46,"--");
-        tokens.put(47,"-");
-        tokens.put(48,"|+");
-        tokens.put(49,"+|");
-        tokens.put(50,"||");
-        tokens.put(51,"@");
-        tokens.put(52,"@");
-        tokens.put(53,"\'");
-        tokens.put(54,"\'");
-        tokens.put(55,"&");
-        tokens.put(56,"&");
+        tokens = new ArrayList<>();
+        tokens.add(new Token(1,"while"));
+        tokens.add(new Token(2,"void"));
+        tokens.add(new Token(3,"string"));
+        tokens.add(new Token(4,"return"));
+        tokens.add(new Token(10,"main"));
+        tokens.add(new Token(11,"literal"));
+        tokens.add(new Token(12,"integer"));
+        tokens.add(new Token(13,"inicio"));
+        tokens.add(new Token(14,"if"));
+        tokens.add(new Token(16,"for"));
+        tokens.add(new Token(17,"float"));
+        tokens.add(new Token(18,"fim"));
+        tokens.add(new Token(19,"else"));
+        tokens.add(new Token(20,"do"));
+        tokens.add(new Token(21,"cout"));
+        tokens.add(new Token(22,"cin"));
+        tokens.add(new Token(23,"char"));
+        tokens.add(new Token(24,"callfuncao"));
+        tokens.add(new Token(25,">>"));
+        tokens.add(new Token(26,">="));
+        tokens.add(new Token(27,">"));
+        tokens.add(new Token(28,"=="));
+        tokens.add(new Token(29,"="));
+        tokens.add(new Token(30,"<="));
+        tokens.add(new Token(31,"<<"));
+        tokens.add(new Token(32,"<"));
+        tokens.add(new Token(33,"++"));
+        tokens.add(new Token(34,"+"));
+        tokens.add(new Token(35,"}"));
+        tokens.add(new Token(36,"{"));
+        tokens.add(new Token(37,";"));
+        tokens.add(new Token(38,":"));
+        tokens.add(new Token(39,"/"));
+        tokens.add(new Token(40,","));
+        tokens.add(new Token(41,"*"));
+        tokens.add(new Token(42,")"));
+        tokens.add(new Token(43,"("));
+        tokens.add(new Token(45,"!="));
+        tokens.add(new Token(46,"--"));
+        tokens.add(new Token(47,"-"));
     }
     
 }

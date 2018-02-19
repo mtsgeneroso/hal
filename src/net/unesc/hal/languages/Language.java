@@ -1,6 +1,8 @@
 package net.unesc.hal.languages;
 
+import net.unesc.hal.data.Token;
+
 public interface Language {
-    public int getToken(String str);
-    public String getToken(Integer cod);
+    public Token getToken(String str);
+    public Token getToken(Integer cod);
 }
