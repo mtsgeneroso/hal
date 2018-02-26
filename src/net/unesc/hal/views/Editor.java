@@ -37,14 +37,18 @@ public class Editor extends javax.swing.JFrame {
         return new Source(fieldEditor.getText());
     }
     
+    public void setSource(String value){
+        fieldEditor.setText(value);
+    }
+    
     public void setTokens(ArrayList<String[]> tokens) {
         // TODO: Poupulate Tokens table
     }
     
     public void setErrors(ArrayList<String[]> tokens) {
         // TODO: Poupulate Errors table
-        System.out.println("Foi");
-        pnErrors.setVisible(true);
+        pnDebug.setVisible(true);
+        splitDebug.setDividerLocation(400);
     }
     
     private void initListener(){
@@ -84,18 +88,19 @@ public class Editor extends javax.swing.JFrame {
         spEditor.setRowHeaderView(txtLineNumber);
         
         pnEditor.add(spEditor);
-        pnErrors.setVisible(false);
+        pnDebug.setVisible(false);
         
     }
-    
     
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
-        MainPanel = new javax.swing.JPanel();
+        pnMain = new javax.swing.JPanel();
+        splitMain = new javax.swing.JSplitPane();
         pnEditor = new javax.swing.JPanel();
         pnDebug = new javax.swing.JPanel();
+        splitDebug = new javax.swing.JSplitPane();
         pnAnalysis = new javax.swing.JPanel();
         spAnalysisDebug = new javax.swing.JScrollPane();
         tbAnalysis = new javax.swing.JTable();
@@ -118,19 +123,34 @@ public class Editor extends javax.swing.JFrame {
         setSize(new java.awt.Dimension(800, 600));
         getContentPane().setLayout(new java.awt.GridLayout(1, 0));
 
-        MainPanel.setBackground(new java.awt.Color(0, 43, 54));
-        MainPanel.setLayout(new java.awt.GridLayout(1, 2));
+        pnMain.setBackground(new java.awt.Color(0, 43, 54));
+        pnMain.setLayout(new java.awt.GridLayout(1, 1));
 
+        splitMain.setBackground(new java.awt.Color(0, 43, 54));
+        splitMain.setBorder(null);
+        splitMain.setDividerLocation((int) (this.getBounds().getWidth() / 2));
+        splitMain.setDividerSize(9);
+        splitMain.setToolTipText("Redimensione horizontalmente o painel de código e debug");
+        splitMain.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
+        pnEditor.setName(""); // NOI18N
         pnEditor.setOpaque(false);
         pnEditor.setLayout(new java.awt.GridLayout(1, 0));
-        MainPanel.add(pnEditor);
+        splitMain.setLeftComponent(pnEditor);
 
         pnDebug.setBackground(new java.awt.Color(0, 43, 54));
         pnDebug.setLayout(new javax.swing.BoxLayout(pnDebug, javax.swing.BoxLayout.Y_AXIS));
 
+        splitDebug.setBackground(new java.awt.Color(0, 43, 54));
+        splitDebug.setBorder(null);
+        splitDebug.setDividerSize(9);
+        splitDebug.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
+        splitDebug.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+
         pnAnalysis.setBackground(new java.awt.Color(0, 43, 54));
         pnAnalysis.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Resultado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         pnAnalysis.setToolTipText("");
+        pnAnalysis.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnAnalysis.setLayout(new javax.swing.BoxLayout(pnAnalysis, javax.swing.BoxLayout.LINE_AXIS));
 
         spAnalysisDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -174,10 +194,11 @@ public class Editor extends javax.swing.JFrame {
 
         pnAnalysis.add(spAnalysisDebug);
 
-        pnDebug.add(pnAnalysis);
+        splitDebug.setLeftComponent(pnAnalysis);
 
         pnErrors.setBackground(new java.awt.Color(0, 43, 54));
         pnErrors.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Erro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        pnErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnErrors.setMinimumSize(new java.awt.Dimension(35, 50));
         pnErrors.setPreferredSize(new java.awt.Dimension(100, 150));
         pnErrors.setRequestFocusEnabled(false);
@@ -190,6 +211,7 @@ public class Editor extends javax.swing.JFrame {
 
         txaErrors.setColumns(20);
         txaErrors.setRows(5);
+        txaErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
         txaErrors.setEnabled(false);
         txaErrors.setFocusable(false);
         txaErrors.setPreferredSize(new java.awt.Dimension(164, 100));
@@ -198,11 +220,15 @@ public class Editor extends javax.swing.JFrame {
 
         pnErrors.add(spErrors);
 
-        pnDebug.add(pnErrors);
+        splitDebug.setRightComponent(pnErrors);
 
-        MainPanel.add(pnDebug);
+        pnDebug.add(splitDebug);
 
-        getContentPane().add(MainPanel);
+        splitMain.setRightComponent(pnDebug);
+
+        pnMain.add(splitMain);
+
+        getContentPane().add(pnMain);
 
         mnBar.setBackground(new java.awt.Color(0, 43, 54));
         mnBar.setBorder(null);
@@ -274,13 +300,9 @@ public class Editor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     private void smRunLexiconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smRunLexiconActionPerformed
-        
-        
-        
     }//GEN-LAST:event_smRunLexiconActionPerformed
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JPanel MainPanel;
     private javax.swing.JMenuBar mnBar;
     private javax.swing.JMenu mnFile;
     private javax.swing.JMenu mnRunner;
@@ -288,6 +310,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JPanel pnDebug;
     private javax.swing.JPanel pnEditor;
     private javax.swing.JPanel pnErrors;
+    private javax.swing.JPanel pnMain;
     private javax.swing.JMenuItem smClose;
     private javax.swing.JPopupMenu.Separator smDivider;
     private javax.swing.JMenuItem smNew;
@@ -296,6 +319,8 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem smSave;
     private javax.swing.JScrollPane spAnalysisDebug;
     private javax.swing.JScrollPane spErrors;
+    private javax.swing.JSplitPane splitDebug;
+    private javax.swing.JSplitPane splitMain;
     private javax.swing.JTable tbAnalysis;
     private javax.swing.JTextArea txaErrors;
     // End of variables declaration//GEN-END:variables
