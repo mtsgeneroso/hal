@@ -1,1 +1,1 @@
-# HAL - Hybrid Access Language 
+# Compilador para a linguagem LMS (Subset Pascal) 
