@@ -2,6 +2,7 @@ package net.unesc.hal.views;
 
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.table.DefaultTableModel;
 import net.unesc.hal.controllers.FiniteAutomaton;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.languages.HAL;
@@ -43,6 +44,20 @@ public class Editor extends javax.swing.JFrame {
     
     public void setTokens(ArrayList<String[]> tokens) {
         // TODO: Poupulate Tokens table
+        
+        DefaultTableModel tbModel = new DefaultTableModel();
+        
+        tbModel.addColumn("Linha");
+        tbModel.addColumn("Código");
+        tbModel.addColumn("Token");
+        
+        for(int i = 0; i < tokens.size(); i++){
+            tbModel.addRow(tokens.get(i));
+        }
+                
+        tbAnalysis.setModel(tbModel);
+        
+        
     }
     
     public void setErrors(ArrayList<String[]> tokens) {

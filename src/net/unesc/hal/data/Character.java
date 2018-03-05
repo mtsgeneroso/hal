@@ -8,6 +8,7 @@ public class Character {
     private boolean num;
     private boolean letter;
     private boolean space;
+    private boolean symbol;
     private boolean endFile;
     private boolean endLine;
 
@@ -22,6 +23,9 @@ public class Character {
         endLine = character.equals(EOL);
         num = character.matches("[0-9]");
         letter = character.matches("[a-zA-Z]");
+        symbol = character.matches("(\\+|\\-|\\*|\\/|\\[|\\]|\\(|\\)|\\:|\\=|\\>|\\<|\\,|\\;|\\.)");
+        
+        
     }
 
     public String getCharacter() {
@@ -54,7 +58,15 @@ public class Character {
 
     @Override
     public String toString() {
-        return "Character{" + "character=" + character + ", num=" + num + ", letter=" + letter + ", space=" + space + ", endFile=" + endFile + ", endLine=" + endLine + '}';
+        return character;
+    }
+
+    public boolean isSymbol() {
+        return symbol;
+    }
+
+    public void setSymbol(boolean symbol) {
+        this.symbol = symbol;
     }
     
 }

@@ -38,10 +38,10 @@ public class EditorListener implements ActionListener {
         
         switch (cmd) {
             case Editor.SAVE:
-                File.write("/", src.toString());
+                File.write(src.getCode(), ed);
                 break;
             case Editor.OPEN:
-                File.read("/");
+                ed.setSource(File.read(ed).toString());
                 break;
             case Editor.CLOSE:
                 ed.dispose();
