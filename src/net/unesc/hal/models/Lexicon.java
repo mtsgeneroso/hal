@@ -123,13 +123,15 @@ public class Lexicon {
             // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
-                if (car < chars.size()) {
+                System.out.println("teste");
+                if (car < chars.size() && !parseBuffer(buffer).equals(lang.LITERAL_BEGIN)) {
                     cur_char = chars.get(++car);
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
                         buffer.add(cur_char);
                         cur_char = chars.get(++car);
                     }
 
+                    // Comentários
                     if (new String(parseBuffer(buffer) + cur_char.getCharacter()).equals(lang.COMMENT_BLOCK_BEGIN) && !comment) {
                         comment = true;
                         cur_char = chars.get(++car);
@@ -141,17 +143,17 @@ public class Lexicon {
                         cur_char = chars.get(++car);
                         buffer.clear();
                     }
+                }
                     
-                    if(comment){
-                        cur_char = chars.get(++car);
-                        buffer.clear();
-                    }
+                if(comment){
+                    cur_char = chars.get(++car);
+                    buffer.clear();
                 }
             }
             
             if (comment) {
                 while (!cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isSpace()) {
-                    System.out.println(cur_line + " : " + cur_char.getCharacter());
+                    //System.out.println(cur_line + " : " + cur_char.getCharacter());
                     if (car < chars.size()) {
                         cur_char = chars.get(++car);
                     }
