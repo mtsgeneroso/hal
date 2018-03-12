@@ -34,8 +34,6 @@ public class EditorListener implements ActionListener {
     private void handle(String cmd) throws EditorException, IOException {
         Source src = ed.getSource();
         
-        if(src == null || src.getCode().isEmpty()) return;
-        
         switch (cmd) {
             case Editor.SAVE:
                 File.write(src.getCode(), ed);

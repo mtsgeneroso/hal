@@ -61,7 +61,11 @@ public class Editor extends javax.swing.JFrame {
     }
     
     public void setErrors(ArrayList<String[]> tokens) {
-        // TODO: Poupulate Errors table
+        
+        for(int i = 0; i < tokens.size(); i++){
+            txaErrors.setText(tokens.get(i)[0] + " : " + tokens.get(i)[1]);
+        }
+        
         pnDebug.setVisible(true);
         splitDebug.setDividerLocation(400);
     }

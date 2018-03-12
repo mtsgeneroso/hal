@@ -1,7 +1,6 @@
 package net.unesc.hal.models;
 
 import java.util.ArrayList;
-import java.util.stream.Stream;
 import net.unesc.hal.controllers.FiniteAutomaton;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.data.Character;
@@ -33,11 +32,10 @@ public class Lexicon {
         return errors;
     }
 
-    private void addError(Integer line, Token token) {
+    private void addError(Integer line, String msg) {
         String[] adition = new String[3];
         adition[0] = line.toString();
-        adition[1] = token.getName();
-        adition[2] = token.getCode().toString();
+        adition[1] = msg;
         errors.add(adition);
     }
 
@@ -123,8 +121,8 @@ public class Lexicon {
             // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
-                System.out.println("teste");
-                if (car < chars.size() && !parseBuffer(buffer).equals(lang.LITERAL_BEGIN)) {
+                
+                if (car < chars.size()) {
                     cur_char = chars.get(++car);
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
                         buffer.add(cur_char);
@@ -182,7 +180,7 @@ public class Lexicon {
             // Identifica o final do arquivo
             if (cur_char.isEndFile()) {
                 if (comment) {
-                    System.out.println("ERRO");
+                    this.addError(cur_line, "Comentário sem fechamento");
                     break;
                 }
                 addToken(cur_line, lang.EOF);
