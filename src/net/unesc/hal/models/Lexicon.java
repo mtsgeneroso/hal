@@ -95,7 +95,7 @@ public class Lexicon {
                     buffer.clear();
                 }
             }
-
+            }
             if (!buffer.isEmpty() && !comment) {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
                 Token token = lang.getToken(parseBuffer(buffer));
