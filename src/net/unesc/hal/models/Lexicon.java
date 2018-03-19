@@ -137,7 +137,9 @@ public class Lexicon {
                 buffer.clear();
             }
 
+
            // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
+
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
 
