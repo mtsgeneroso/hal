@@ -70,6 +70,19 @@ public class Lexicon {
         while (car < chars.size()) {
             cur_char = chars.get(car);
 
+            // Integer
+            while (cur_char.isNum() && !comment) {
+                buffer.add(cur_char);
+                if (car < chars.size()) {
+                    cur_char = chars.get(++car);
+                }
+            }
+
+            if (!buffer.isEmpty() && !comment) {
+                addToken(cur_line, lang.INTEGER);
+                buffer.clear();
+            }
+
             // Keywords
             while (cur_char.isLetter() && !comment) {
                 buffer.add(cur_char);
@@ -109,19 +122,6 @@ public class Lexicon {
                         break;
                     }
                 }
-                buffer.clear();
-            }
-
-            // Integer
-            while (cur_char.isNum() && !comment) {
-                buffer.add(cur_char);
-                if (car < chars.size()) {
-                    cur_char = chars.get(++car);
-                }
-            }
-
-            if (!buffer.isEmpty() && !comment) {
-                addToken(cur_line, lang.INTEGER);
                 buffer.clear();
             }
 
