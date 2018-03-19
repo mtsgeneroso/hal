@@ -70,6 +70,30 @@ public class Lexicon {
         while (car < chars.size()) {
             cur_char = chars.get(car);
 
+            // Integer
+            while (cur_char.isNum() && !comment) {
+                buffer.add(cur_char);
+                if (car < chars.size()) {
+                    cur_char = chars.get(++car);
+                }
+            }
+
+            if (!buffer.isEmpty() && !comment) {
+                Token token = lang.getToken(parseBuffer(buffer));
+                if (token != null) {
+                    addToken(cur_line, token);
+                } else {
+                    Integer inteiro = new Integer(parseBuffer(buffer));
+                    if (inteiro >= -32767 && inteiro <= 32767) {
+                        addToken(cur_line, lang.INTEGER);
+                    } else {
+                        this.addError(cur_line, "Limite excedido");
+                        break;
+                    }
+                }
+                buffer.clear();
+            }
+            
             // Keywords
             while (cur_char.isLetter() && !comment) {
                 buffer.add(cur_char);
@@ -77,6 +101,7 @@ public class Lexicon {
                     cur_char = chars.get(++car);
                 }
             }
+            
 
             // Identificador
             if (cur_char.isNum() && !comment) {
@@ -112,25 +137,16 @@ public class Lexicon {
                 buffer.clear();
             }
 
-            // Integer
-            while (cur_char.isNum() && !comment) {
-                buffer.add(cur_char);
-                if (car < chars.size()) {
-                    cur_char = chars.get(++car);
-                }
-            }
-
-            if (!buffer.isEmpty() && !comment) {
-                addToken(cur_line, lang.INTEGER);
-                buffer.clear();
-            }
-
-            // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
+           // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
 
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
+                    if(cur_char.isNum()){
+                        
+                    }
+                    
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
                         buffer.add(cur_char);
                         cur_char = chars.get(++car);
