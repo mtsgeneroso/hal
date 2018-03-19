@@ -82,19 +82,19 @@ public class Lexicon {
             if (cur_char.isNum() && !comment) {
                 while (cur_char.isNum()) {
                     buffer.add(cur_char);
-                    
+
                     if (car < chars.size()) {
                         cur_char = chars.get(++car);
                     }
-                 
 
+                }
                 if (!buffer.isEmpty()) {
                     //System.out.println(cur_line + " : " + parseBuffer(buffer));
-                    
+
                     addToken(cur_line, lang.IDENTIFIER);
                     buffer.clear();
                 }
-            }
+
             }
             if (!buffer.isEmpty() && !comment) {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
@@ -102,10 +102,9 @@ public class Lexicon {
                 if (token != null) {
                     addToken(cur_line, token);
                 } else {
-                    if(parseBuffer(buffer).length() <=30){
+                    if (parseBuffer(buffer).length() <= 30) {
                         addToken(cur_line, lang.IDENTIFIER);
-                    }
-                    else{
+                    } else {
                         this.addError(cur_line, "Limite excedido");
                         break;
                     }
@@ -129,7 +128,7 @@ public class Lexicon {
             // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
-                
+
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
@@ -150,13 +149,13 @@ public class Lexicon {
                         buffer.clear();
                     }
                 }
-                    
-                if(comment){
+
+                if (comment) {
                     cur_char = chars.get(++car);
                     buffer.clear();
                 }
             }
-            
+
             if (comment) {
                 while (!cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isSpace()) {
                     //System.out.println(cur_line + " : " + cur_char.getCharacter());
