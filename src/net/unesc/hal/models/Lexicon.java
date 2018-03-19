@@ -82,13 +82,15 @@ public class Lexicon {
             if (cur_char.isNum() && !comment) {
                 while (cur_char.isNum()) {
                     buffer.add(cur_char);
+                    
                     if (car < chars.size()) {
                         cur_char = chars.get(++car);
                     }
-                }
+                 
 
                 if (!buffer.isEmpty()) {
                     //System.out.println(cur_line + " : " + parseBuffer(buffer));
+                    
                     addToken(cur_line, lang.IDENTIFIER);
                     buffer.clear();
                 }
@@ -100,7 +102,13 @@ public class Lexicon {
                 if (token != null) {
                     addToken(cur_line, token);
                 } else {
-                    addToken(cur_line, lang.IDENTIFIER);
+                    if(parseBuffer(buffer).length() <=30){
+                        addToken(cur_line, lang.IDENTIFIER);
+                    }
+                    else{
+                        this.addError(cur_line, "Limite excedido");
+                        break;
+                    }
                 }
                 buffer.clear();
             }
