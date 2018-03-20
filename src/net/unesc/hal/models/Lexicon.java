@@ -71,6 +71,7 @@ public class Lexicon {
             cur_char = chars.get(car);
 
             // Integer
+            
             while (cur_char.isNum() && !comment) {
                 buffer.add(cur_char);
                 if (car < chars.size()) {
@@ -145,9 +146,28 @@ public class Lexicon {
 
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
-                    if(cur_char.isNum()){
+                    
+                    // Dígitos negativos]
+                    
+                    if(lang.getToken(parseBuffer(buffer)).getCode() == 31 && cur_char.isNum()){
+                        buffer.add(cur_char);
+                        cur_char = chars.get(++car);
+                        
+                        while(!lang.isSeparator(cur_char) && !cur_char.isSpace() && !cur_char.isLetter()){
+                            buffer.add(cur_char);
+                            cur_char = chars.get(++car);
+                        }
+                        
+                        if(cur_char.isLetter()){
+                            addError(cur_line, "Erro ao processar sequência de caracteres");
+                            break;
+                        } else {
+                            addToken(cur_line, lang.INTEGER);
+                            buffer.clear();
+                        }
                         
                     }
+                    
                     
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
                         buffer.add(cur_char);
