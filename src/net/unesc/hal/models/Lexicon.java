@@ -153,12 +153,18 @@ public class Lexicon {
                         buffer.add(cur_char);
                         cur_char = chars.get(++car);
                         
-                        while(!lang.isSeparator(cur_char) && !cur_char.isSpace() && !cur_char.isLetter()){
+                        while(cur_char.isNum()){
                             buffer.add(cur_char);
-                            cur_char = chars.get(++car);
+                            System.out.println("Ponteiro: " + car + "| Total: " + chars.size());
+                            if (car < chars.size()) {
+                                cur_char = chars.get(++car);
+                            } else {
+                                break;
+                            }
                         }
                         
                         if(cur_char.isLetter()){
+                            System.out.println("BUFFER: " + parseBuffer(buffer) + " : " + cur_char.isLetter());
                             addError(cur_line, "Erro ao processar sequência de caracteres");
                             break;
                         } else {
