@@ -2,8 +2,8 @@ package net.unesc.hal.models;
 
 import java.util.ArrayList;
 import net.unesc.hal.controllers.FiniteAutomaton;
-import net.unesc.hal.data.Source;
 import net.unesc.hal.data.Character;
+import net.unesc.hal.data.Source;
 import net.unesc.hal.data.Token;
 import net.unesc.hal.languages.HAL;
 
@@ -67,34 +67,33 @@ public class Lexicon {
 
         ArrayList<Character> buffer = new ArrayList<>();
 
-        while (car < chars.size()) {
+        while (car < chars.size()) {//o problema está aqui, loop infito
             cur_char = chars.get(car);
 
             // Integer
-            
             while (cur_char.isNum() && !comment) {
                 buffer.add(cur_char);
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
                 }
+
+                if (!buffer.isEmpty() && !comment) {
+                    Token token = lang.getToken(parseBuffer(buffer));
+                    if (token != null) {
+                        addToken(cur_line, token);
+                    } else {
+                        Integer inteiro = new Integer(parseBuffer(buffer));
+                        if (inteiro >= -32767 && inteiro <= 32767) {
+                            addToken(cur_line, lang.INTEGER);
+                        } else {
+                            this.addError(cur_line, "Limite excedido");
+                            break;
+                        }
+                    }
+                    buffer.clear();
+                }
             }
 
-            if (!buffer.isEmpty() && !comment) {
-                Token token = lang.getToken(parseBuffer(buffer));
-                if (token != null) {
-                    addToken(cur_line, token);
-                } else {
-                    Integer inteiro = new Integer(parseBuffer(buffer));
-                    if (inteiro >= -32767 && inteiro <= 32767) {
-                        addToken(cur_line, lang.INTEGER);
-                    } else {
-                        this.addError(cur_line, "Limite excedido");
-                        break;
-                    }
-                }
-                buffer.clear();
-            }
-            
             // Keywords
             while (cur_char.isLetter() && !comment) {
                 buffer.add(cur_char);
@@ -102,7 +101,6 @@ public class Lexicon {
                     cur_char = chars.get(++car);
                 }
             }
-            
 
             // Identificador
             if (cur_char.isNum() && !comment) {
@@ -120,8 +118,8 @@ public class Lexicon {
                     addToken(cur_line, lang.IDENTIFIER);
                     buffer.clear();
                 }
-
             }
+
             if (!buffer.isEmpty() && !comment) {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
                 Token token = lang.getToken(parseBuffer(buffer));
@@ -138,22 +136,19 @@ public class Lexicon {
                 buffer.clear();
             }
 
-
-           // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
-
+            // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
 
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
-                    
+
                     // Dígitos negativos]
-                    
-                    if(lang.getToken(parseBuffer(buffer)).getCode() == 31 && cur_char.isNum()){
+                    if (lang.getToken(parseBuffer(buffer)).getCode() == 31 && cur_char.isNum()) {
                         buffer.add(cur_char);
                         cur_char = chars.get(++car);
-                        
-                        while(cur_char.isNum()){
+
+                        while (cur_char.isNum()) {
                             buffer.add(cur_char);
                             System.out.println("Ponteiro: " + car + "| Total: " + chars.size());
                             if (car < chars.size()) {
@@ -162,8 +157,8 @@ public class Lexicon {
                                 break;
                             }
                         }
-                        
-                        if(cur_char.isLetter()){
+
+                        if (cur_char.isLetter()) {
                             System.out.println("BUFFER: " + parseBuffer(buffer) + " : " + cur_char.isLetter());
                             addError(cur_line, "Erro ao processar sequência de caracteres");
                             break;
@@ -171,10 +166,9 @@ public class Lexicon {
                             addToken(cur_line, lang.INTEGER);
                             buffer.clear();
                         }
-                        
+
                     }
-                    
-                    
+
                     if (lang.getToken(parseBuffer(buffer) + cur_char.getCharacter()) != null && !comment) {
                         buffer.add(cur_char);
                         cur_char = chars.get(++car);
