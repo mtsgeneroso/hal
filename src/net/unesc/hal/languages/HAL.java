@@ -9,10 +9,12 @@ public class HAL implements Language {
     public final String COMMENT_BLOCK_END = "*)";
     public final String LITERAL_BEGIN = "'";
     public final String LITERAL_END = "'";
+    public final int LITERAL_LIMIT = 255;
 
     public final Token IDENTIFIER = new Token(25, "identificador");
     public final Token INTEGER = new Token(26, "inteiro");
     public final Token EOF = new Token(51, "$");
+    public final Token LITERAL = new Token(48, "literal");
 
     public ArrayList<Token> tokens;
 
@@ -40,8 +42,6 @@ public class HAL implements Language {
                 return tokens.get(i);
             }
         }
-
-        System.out.println(cod);
         return null;
     }
 
@@ -92,7 +92,6 @@ public class HAL implements Language {
         tokens.add(new Token(45, "<>"));
         tokens.add(new Token(46, ","));
         tokens.add(new Token(47, ";"));
-        tokens.add(new Token(48, "literal"));
         tokens.add(new Token(49, "."));
         tokens.add(new Token(50, ".."));
     }
