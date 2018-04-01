@@ -55,9 +55,16 @@ public class Editor extends javax.swing.JFrame {
             tbModel.addRow(tokens.get(i));
         }
                 
-        tbAnalysis.setModel(tbModel);
-        
-        
+        tbAnalysis.setModel(tbModel);   
+    }
+    
+    public void clearTokens(){
+        ArrayList<String[]> tokens = new ArrayList<>();
+        setTokens(tokens);
+    }
+    public void clearErrors(){
+        txaErrors.setText("");
+        pnDebug.setVisible(false);
     }
     
     public void setErrors(ArrayList<String[]> tokens) {
