@@ -3,7 +3,7 @@ package net.unesc.hal.data;
 import java.util.ArrayList;
 
 public class Source {
-    
+
     private String code;
     private Integer line_count;
 
@@ -24,23 +24,32 @@ public class Source {
         return "Source{" + "code=" + code + '}';
     }
 
-    public ArrayList<Character> getChars() {
-                
-        ArrayList<Character> chars = new ArrayList<>();
-        
+    public ArrayList<Char> getChars() {
+
+        ArrayList<Char> chars = new ArrayList<>();
+
         String[] rows = code.split("\n");
         line_count = rows.length;
-        for(int i = 0; i < rows.length; i++){
-            
+        for (int i = 0; i < rows.length; i++) {
+
             String[] cols = rows[i].split("");
             
-            for(int j = 0; j < cols.length; j++){                
-                chars.add(new Character(cols[j]));
+            for (int j = 0; j < cols.length; j++) {
+                if(!cols[j].isEmpty()) {
+                    chars.add(new Char(cols[j].charAt(0)));
+                } else {
+                    chars.add(new Char((" ").charAt(0)));
+                }
             }
-            
-            chars.add(new Character(Character.EOL));
+
+            Char endLine = new Char();
+            endLine.setEndLine(true);
+            chars.add(endLine);
         }
-        chars.add(new Character(Character.EOF));
+
+        Char endFile = new Char();
+        endFile.setEndFile(true);
+        chars.add(endFile);
         return chars;
     }
 
