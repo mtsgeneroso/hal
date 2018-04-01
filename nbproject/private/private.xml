@@ -5,8 +5,7 @@
         <group name="analisador-lexico"/>
         <group>
             <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/languages/HAL.java</file>
-            <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/views/Editor.java</file>
-            <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/data/Character.java</file>
+            <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/data/Char.java</file>
             <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/models/Lexicon.java</file>
             <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/listeners/EditorListener.java</file>
             <file>file:/home/mtsgeneroso/Workspace/hal/src/net/unesc/hal/data/Source.java</file>
