@@ -1,10 +1,10 @@
 package net.unesc.hal.data;
 
-public class Character {
+public class Char {
 
-    public static String EOL = "EOL";
-    public static String EOF = "EOF";
-    private String character;
+    public static int EOL = 1;
+    public static int EOF = 2;
+    private Character character;
     private boolean num;
     private boolean letter;
     private boolean space;
@@ -12,27 +12,30 @@ public class Character {
     private boolean endFile;
     private boolean endLine;
 
-    public Character(String character) {
+    public Char(Character character) {
         this.character = character;
         setProperties();
     }
     
+    public Char() {
+    }
+    
     private void setProperties(){
-        space = character.equals(" ");
+        space = Character.isWhitespace(character);
         endFile = character.equals(EOF);
         endLine = character.equals(EOL);
-        num = character.matches("[0-9]");
-        letter = character.matches("[a-zA-Z]");
-        symbol = character.matches("(\\+|\\-|\\*|\\/|\\[|\\]|\\(|\\)|\\:|\\=|\\>|\\<|\\,|\\;|\\.)");
+        num = Character.isDigit(character);
+        letter = Character.isAlphabetic(character);
+        symbol = character.toString().matches("(\\+|\\-|\\*|\\/|\\[|\\]|\\(|\\)|\\:|\\=|\\>|\\<|\\,|\\;|\\.|\\')");
         
         
     }
 
-    public String getCharacter() {
+    public Character getChar() {
         return character;
     }
 
-    public void setCharacter(String character) {
+    public void setChar(Character character) {
         this.character = character;
     }
 
@@ -54,11 +57,19 @@ public class Character {
 
     public boolean isSpace() {
         return space;
-    }   
+    }
+    
+    public void setEndLine(boolean value){
+        this.endLine = value;
+    }
+    
+    public void setEndFile(boolean value){
+        this.endFile = value;
+    }
 
     @Override
     public String toString() {
-        return character;
+        return character.toString();
     }
 
     public boolean isSymbol() {
