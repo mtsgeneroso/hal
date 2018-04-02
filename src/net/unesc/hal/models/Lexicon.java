@@ -70,37 +70,8 @@ public class Lexicon {
 
         ArrayList<Char> buffer = new ArrayList<>();
 
-        while (car < chars.size()) {//o problema está aqui, loop infito
+        while (car < chars.size()) {
             cur_char = chars.get(car);
-
-            // Integer
-            while (cur_char.isNum() && !is_comment_loop && !is_literal_loop) {
-                buffer.add(cur_char);
-                if (car < chars.size()) {
-                    cur_char = chars.get(++car);
-                }
-
-                if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
-                    Token token = lang.getToken(parseBuffer(buffer));
-                    if (token != null) {
-                        addToken(cur_line, token);
-                    } else {
-                        Integer inteiro = new Integer(parseBuffer(buffer));
-                        if (inteiro >= -32767 && inteiro <= 32767) {
-                            addToken(cur_line, lang.INTEGER);
-                        } else {
-                            this.addError(cur_line, "Limite excedido");
-                            break;
-                        }
-                    }
-                    buffer.clear();
-                }
-            }
-
-            if (!is_comment_loop && !is_literal_loop && !cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isLetter() && !cur_char.isNum() && !cur_char.isSpace()) {
-                addError(cur_line, "Caracter " + cur_char + " desconhecido");
-                break;
-            }
 
             // Integer
             while (cur_char.isNum() && !is_comment_loop && !is_literal_loop) {
@@ -124,6 +95,11 @@ public class Lexicon {
                     }
                 }
                 buffer.clear();
+            }
+
+            if (!is_comment_loop && !is_literal_loop && !cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isLetter() && !cur_char.isNum() && !cur_char.isSpace()) {
+                addError(cur_line, "Caracter " + cur_char + " desconhecido");
+                break;
             }
 
             // Keywords
@@ -195,8 +171,14 @@ public class Lexicon {
                                 addError(cur_line, "Erro ao processar sequência de caracteres");
                                 break;
                             } else {
-                                addToken(cur_line, lang.INTEGER);
-                                buffer.clear();
+                                Integer inteiro = new Integer(parseBuffer(buffer));
+                                if (inteiro >= -32767 && inteiro <= 32767) {
+                                    addToken(cur_line, lang.INTEGER);
+                                    buffer.clear();
+                                } else {
+                                    this.addError(cur_line, "Limite excedido");
+                                    break;
+                                }
                             }
 
                         }
