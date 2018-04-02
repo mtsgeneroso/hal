@@ -74,13 +74,13 @@ public class Lexicon {
             cur_char = chars.get(car);
 
             // Integer
-            while (cur_char.isNum() && !is_comment_loop) {
+            while (cur_char.isNum() && !is_comment_loop && !is_literal_loop) {
                 buffer.add(cur_char);
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
                 }
 
-                if (!buffer.isEmpty() && !is_comment_loop) {
+                if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
                     Token token = lang.getToken(parseBuffer(buffer));
                     if (token != null) {
                         addToken(cur_line, token);
@@ -226,7 +226,7 @@ public class Lexicon {
                         if (literal_count <= lang.LITERAL_LIMIT) {
                             addToken(literal_line, lang.LITERAL);
                         } else {
-                            addError(car, "Limite de literal excedido");
+                            addError(cur_line, "Limite de literal excedido");
                             break;
                         }
 
