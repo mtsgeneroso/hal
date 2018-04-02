@@ -7,7 +7,7 @@ var
 begin 
     readln(a); 
     if a=x then  
-a: 12546;
+        a: 32768;
         z:=z+x 
     else begin 
         z:=z-x;   
@@ -24,4 +24,5 @@ begin
         z:=z+x+y; 
     writeln(z); 
 end
+
 

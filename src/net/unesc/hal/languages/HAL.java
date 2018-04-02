@@ -17,6 +17,8 @@ public class HAL implements Language {
     public final Token LITERAL = new Token(48, "literal");
 
     public ArrayList<Token> tokens;
+    public ArrayList<Token> separators;
+
 
     public HAL() {
         buildTokens();
@@ -44,9 +46,20 @@ public class HAL implements Language {
         }
         return null;
     }
+    
+    public boolean isSeparator(Character c){
+        for (int i = 0; i < separators.size(); i++) {
+            if (c.toString().equals(tokens.get(i).getName())) {
+                return true;
+            }
+        }
+        return false;
+    }
 
     private void buildTokens() {
         tokens = new ArrayList<>();
+        separators = new ArrayList<>();
+        
         tokens.add(new Token(1, "program"));
         tokens.add(new Token(2, "label"));
         tokens.add(new Token(3, "const"));
@@ -75,25 +88,39 @@ public class HAL implements Language {
         tokens.add(new Token(28, "to"));
         tokens.add(new Token(29, "case"));
         tokens.add(new Token(30, "+"));
+        separators.add(this.getToken(30));
         tokens.add(new Token(31, "-"));
+        separators.add(this.getToken(31));
         tokens.add(new Token(32, "*"));
+        separators.add(this.getToken(32));
         tokens.add(new Token(33, "/"));
+        separators.add(this.getToken(33));
         tokens.add(new Token(34, "["));
+        separators.add(this.getToken(34));
         tokens.add(new Token(35, "]"));
+        separators.add(this.getToken(35));
         tokens.add(new Token(36, "("));
+        separators.add(this.getToken(36));
         tokens.add(new Token(37, ")"));
+        separators.add(this.getToken(37));
         tokens.add(new Token(38, ":="));
         tokens.add(new Token(39, ":"));
         tokens.add(new Token(40, "="));
+        separators.add(this.getToken(40));
         tokens.add(new Token(41, ">"));
+        separators.add(this.getToken(41));
         tokens.add(new Token(42, ">="));
         tokens.add(new Token(43, "<"));
+        separators.add(this.getToken(43));
         tokens.add(new Token(44, "<="));
         tokens.add(new Token(45, "<>"));
         tokens.add(new Token(46, ","));
+        separators.add(this.getToken(46));
         tokens.add(new Token(47, ";"));
         tokens.add(new Token(49, "."));
         tokens.add(new Token(50, ".."));
+        
+        
     }
 
 }

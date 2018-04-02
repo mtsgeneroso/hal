@@ -70,8 +70,32 @@ public class Lexicon {
 
         ArrayList<Char> buffer = new ArrayList<>();
 
-        while (car < chars.size()) {
+        while (car < chars.size()) {//o problema está aqui, loop infito
             cur_char = chars.get(car);
+
+            // Integer
+            while (cur_char.isNum() && !is_comment_loop) {
+                buffer.add(cur_char);
+                if (car < chars.size()) {
+                    cur_char = chars.get(++car);
+                }
+
+                if (!buffer.isEmpty() && !is_comment_loop) {
+                    Token token = lang.getToken(parseBuffer(buffer));
+                    if (token != null) {
+                        addToken(cur_line, token);
+                    } else {
+                        Integer inteiro = new Integer(parseBuffer(buffer));
+                        if (inteiro >= -32767 && inteiro <= 32767) {
+                            addToken(cur_line, lang.INTEGER);
+                        } else {
+                            this.addError(cur_line, "Limite excedido");
+                            break;
+                        }
+                    }
+                    buffer.clear();
+                }
+            }
 
             if (!is_comment_loop && !is_literal_loop && !cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isLetter() && !cur_char.isNum() && !cur_char.isSpace()) {
                 addError(cur_line, "Caracter " + cur_char + " desconhecido");
@@ -143,8 +167,8 @@ public class Lexicon {
                 }
                 buffer.clear();
             }
-
             // Operadores Aritiméticos, Sinais Relacionais, Simbolos Especiais, Dígitos negativos, Literais
+
             if (cur_char.isSymbol()) {
                 buffer.add(cur_char);
 
@@ -194,7 +218,6 @@ public class Lexicon {
                             cur_char = chars.get(++car);
                             buffer.clear();
                         }
-
                     }
 
                     // Literal
@@ -218,14 +241,12 @@ public class Lexicon {
                     }
 
                 }
-
                 if (is_comment_loop || is_literal_loop) {
                     literal_count++;
                     cur_char = chars.get(++car);
                     buffer.clear();
                 }
             }
-
             if (is_comment_loop || is_literal_loop) {
                 while (!cur_char.isSymbol() && !cur_char.isEndFile() && !cur_char.isEndLine() && !cur_char.isSpace()) {
                     //System.out.println(cur_line + " : " + cur_char.getChar());
