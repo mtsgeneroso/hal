@@ -82,7 +82,7 @@ public class Lexicon {
             }
 
             if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
-                Token token = lang.getToken(parseBuffer(buffer));
+                Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
                     addToken(cur_line, token);
                 } else {
@@ -130,7 +130,7 @@ public class Lexicon {
 
             if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
-                Token token = lang.getToken(parseBuffer(buffer));
+                Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
                     addToken(cur_line, token);
                 } else {
@@ -151,10 +151,10 @@ public class Lexicon {
                 if (car < chars.size()) {
                     cur_char = chars.get(++car);
 
-                    if (lang.getToken(parseBuffer(buffer)) != null && !is_literal_loop) {
+                    if (lang.getTerminal(parseBuffer(buffer)) != null && !is_literal_loop) {
 
                         // Dígitos negativos
-                        if (lang.getToken(parseBuffer(buffer)).getCode() == 31 && cur_char.isNum() && !is_comment_loop) {
+                        if (lang.getTerminal(parseBuffer(buffer)).getCode() == 31 && cur_char.isNum() && !is_comment_loop) {
                             buffer.add(cur_char);
                             cur_char = chars.get(++car);
 
@@ -183,7 +183,7 @@ public class Lexicon {
 
                         }
 
-                        if (lang.getToken(parseBuffer(buffer) + cur_char.getChar()) != null && !is_comment_loop && !is_literal_loop) {
+                        if (lang.getTerminal(parseBuffer(buffer) + cur_char.getChar()) != null && !is_comment_loop && !is_literal_loop) {
                             buffer.add(cur_char);
                             cur_char = chars.get(++car);
                         }
@@ -241,7 +241,7 @@ public class Lexicon {
 
             if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
-                Token token = lang.getToken(parseBuffer(buffer));
+                Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
                     addToken(cur_line, token);
                 } else {

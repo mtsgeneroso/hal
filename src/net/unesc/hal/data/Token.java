@@ -8,7 +8,7 @@ public class Token {
         this.code = code;
         this.name = name;
     }
-
+    
     public String getName() {
         return name;
     }
@@ -24,5 +24,6 @@ public class Token {
     public void setCode(Integer code) {
         this.code = code;
     }
+    
     
 }
