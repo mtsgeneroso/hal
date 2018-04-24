@@ -56,8 +56,9 @@ public class EditorListener implements ActionListener {
                 ArrayList<String[]> tokens = lex.getTokens();
                 ed.setTokens(tokens);
                 ed.setErrors(lex.getErrors());
-                Syntactic syn = new Syntactic(tokens, ed.getFiniteAutomaton());
-                
+                if(lex.getErrors().isEmpty()) {
+                    Syntactic syn = new Syntactic(tokens, ed.getFiniteAutomaton());
+                }
                 break;
             default:
                 throw new EditorException("Comando inexistente: " + cmd);

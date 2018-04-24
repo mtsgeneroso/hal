@@ -6,8 +6,7 @@ var
     a :integer; 
 begin 
     readln(a); 
-    if a=x then  
-        a: 32768;
+    if a=x then
         z:=z+x 
     else begin 
         z:=z-x;   
@@ -23,6 +22,8 @@ begin
     else  
         z:=z+x+y; 
     writeln(z); 
-end
+end.
+
+
 
 

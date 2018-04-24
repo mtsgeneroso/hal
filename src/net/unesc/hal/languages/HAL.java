@@ -1,6 +1,10 @@
 package net.unesc.hal.languages;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Map;
+import java.util.Set;
 import net.unesc.hal.data.Token;
 
 public class HAL implements Language {
@@ -16,9 +20,8 @@ public class HAL implements Language {
     public final Token EOF = new Token(51, "$");
     public final Token LITERAL = new Token(48, "literal");
 
-    public ArrayList<Token> terminals;
-    public ArrayList<Token> non_terminals;
-    public ArrayList<Token> separators;
+    public ArrayList<Token> terminals, non_terminals, separators, derivations;
+    public Map<String, String> parsing;
 
     public HAL() {
         buildTokens();
@@ -38,10 +41,42 @@ public class HAL implements Language {
 
     @Override
     public Token getTerminal(Integer cod) {
-
-        for (int i = 1; i <= terminals.size(); i++) {
+        
+        switch(cod) {
+            case 26:
+                return INTEGER;
+            case 25:
+                return IDENTIFIER;
+            case 51:
+                return EOF;
+            case 48:
+                return LITERAL;
+        }
+        
+        for (int i = 0; i < terminals.size(); i++) {
             if (cod.equals(terminals.get(i).getCode())) {
                 return terminals.get(i);
+            }
+        }
+        return null;
+    }
+
+    public Token getNonTerminal(String str) {
+
+        for (int i = 0; i < non_terminals.size(); i++) {
+            if (str.equals(non_terminals.get(i).getName())) {
+                return non_terminals.get(i);
+            }
+        }
+
+        return null;
+    }
+
+    public Token getNonTerminal(Integer cod) {
+
+        for (int i = 0; i < non_terminals.size(); i++) {
+            if (cod.equals(non_terminals.get(i).getCode())) {
+                return non_terminals.get(i);
             }
         }
         return null;
@@ -55,15 +90,21 @@ public class HAL implements Language {
         }
         return false;
     }
-    
-    public ArrayList<Token> getNonTerminals(){
+
+    public ArrayList<Token> getNonTerminals() {
         return non_terminals;
+    }
+
+    public Map<String, String> getParsing() {
+        return parsing;
     }
 
     private void buildTokens() {
         terminals = new ArrayList<>();
         non_terminals = new ArrayList<>();
         separators = new ArrayList<>();
+        derivations = new ArrayList<>();
+        parsing = new HashMap<>();
 
         terminals.add(new Token(1, "program"));
         terminals.add(new Token(2, "label"));
@@ -161,6 +202,198 @@ public class HAL implements Language {
         non_terminals.add(new Token(85, "CONTCASE"));
         non_terminals.add(new Token(86, "RPINTEIRO"));
         non_terminals.add(new Token(87, "SEMEFEITO"));
+        
+        parsing.put("52|1","1|25|47|53|49");
+        parsing.put("53|2","54|56|59|62|64");
+        parsing.put("53|3","54|56|59|62|64");
+        parsing.put("53|4","54|56|59|62|64");
+        parsing.put("53|5","54|56|59|62|64");
+        parsing.put("53|6","54|56|59|62|64");
+        parsing.put("54|2","2|55|47");
+        parsing.put("54|3", null);
+        parsing.put("54|4", null);
+        parsing.put("54|5", null);
+        parsing.put("54|6", null);
+        parsing.put("55|25","25|56");
+        parsing.put("56|39", null);
+        parsing.put("56|46","46|25|56");
+        parsing.put("56|47", null);
+        parsing.put("57|3","3|25|40|26|47|58");
+        parsing.put("57|4", null);
+        parsing.put("57|5", null);
+        parsing.put("57|6", null);
+        parsing.put("58|4", null);
+        parsing.put("58|5", null);
+        parsing.put("58|6", null);
+        parsing.put("58|25","25|40|26|47|58");
+        parsing.put("59|4","4|55|39|61|47|60");
+        parsing.put("59|5", null);
+        parsing.put("59|6", null);
+        parsing.put("60|5", null);
+        parsing.put("60|6", null);
+        parsing.put("60|25","55|39|61|47|60");
+        parsing.put("61|8","8");
+        parsing.put("61|9","9|34|26|50|26|35|11|8");
+        parsing.put("62|5","5|25|63|47|53|47|62");
+        parsing.put("62|6", null);
+        parsing.put("63|36","36|55|39|8|37");
+        parsing.put("63|39", null);
+        parsing.put("63|47", null);
+        parsing.put("64|6","6|66|65|7");
+        parsing.put("65|7", null);
+        parsing.put("65|47","47|66|65");
+        parsing.put("66|6","64");
+        parsing.put("66|7", null);
+        parsing.put("66|11","11|25|69");
+        parsing.put("66|12","52|25");
+        parsing.put("66|13","13|77|14|66|71");
+        parsing.put("66|15", null);
+        parsing.put("66|16","16|77|17|66");
+        parsing.put("66|18","18|66|19|77");
+        parsing.put("66|19", null);
+        parsing.put("66|20","20|36|72|74|37");
+        parsing.put("66|21","21|36|75|76|37");
+        parsing.put("66|25","25|67");
+        parsing.put("66|27","27|25|38|77|28|77|17|66");
+        parsing.put("66|29","29|77|11|84|7");
+        parsing.put("66|47", null);
+        parsing.put("67|34","68|38|77");
+        parsing.put("67|38","68|38|77");
+        parsing.put("67|39","39|66");
+        parsing.put("68|34","34|77|35");
+        parsing.put("68|38", null);
+        parsing.put("69|7", null);
+        parsing.put("69|15", null);
+        parsing.put("69|19", null);
+        parsing.put("69|36","36|77|70|37");
+        parsing.put("69|47", null);
+        parsing.put("70|37", null);
+        parsing.put("70|46","46|77|70");
+        parsing.put("71|7", null);
+        parsing.put("71|15","15|66");
+        parsing.put("71|19", null);
+        parsing.put("71|47", null);
+        parsing.put("72|25","25|73");
+        parsing.put("73|7", null);
+        parsing.put("73|10", null);
+        parsing.put("73|14", null);
+        parsing.put("73|15", null);
+        parsing.put("73|17", null);
+        parsing.put("73|19", null);
+        parsing.put("73|22", null);
+        parsing.put("73|23", null);
+        parsing.put("73|28", null);
+        parsing.put("73|30", null);
+        parsing.put("73|31", null);
+        parsing.put("73|32", null);
+        parsing.put("73|33", null);
+        parsing.put("73|34","34|77|35");
+        parsing.put("73|35", null);
+        parsing.put("73|37", null);
+        parsing.put("73|40", null);
+        parsing.put("73|41", null);
+        parsing.put("73|42", null);
+        parsing.put("73|43", null);
+        parsing.put("73|44", null);
+        parsing.put("73|45", null);
+        parsing.put("73|46", null);
+        parsing.put("73|47", null);
+        parsing.put("74|37", null);
+        parsing.put("74|46","46|72|74");
+        parsing.put("75|24","77");
+        parsing.put("75|25","77");
+        parsing.put("75|26","77");
+        parsing.put("75|30","77");
+        parsing.put("75|31","77");
+        parsing.put("75|36","77");
+        parsing.put("75|48","48");
+        parsing.put("76|37", null);
+        parsing.put("76|46","46|75|76");
+        parsing.put("77|24","79|78");
+        parsing.put("77|25","79|78");
+        parsing.put("77|26","79|78");
+        parsing.put("77|30","79|78");
+        parsing.put("77|31","79|78");
+        parsing.put("77|36","79|78");
+        parsing.put("78|7", null);
+        parsing.put("78|10", null);
+        parsing.put("78|14", null);
+        parsing.put("78|15", null);
+        parsing.put("78|17", null);
+        parsing.put("78|19", null);
+        parsing.put("78|28", null);
+        parsing.put("78|35", null);
+        parsing.put("78|37", null);
+        parsing.put("78|40","40|79");
+        parsing.put("78|41","41|79");
+        parsing.put("78|42","42|79");
+        parsing.put("78|43","43|79");
+        parsing.put("78|44","44|79");
+        parsing.put("78|45","45|79");
+        parsing.put("78|46", null);
+        parsing.put("78|47", null);
+        parsing.put("79|24","81|80");
+        parsing.put("79|25","81|80");
+        parsing.put("79|26","81|80");
+        parsing.put("79|30","30|81|80");
+        parsing.put("79|31","31|81|80");
+        parsing.put("79|36","81|80");
+        parsing.put("80|7", null);
+        parsing.put("80|10", null);
+        parsing.put("80|14", null);
+        parsing.put("80|15", null);
+        parsing.put("80|17", null);
+        parsing.put("80|19", null);
+        parsing.put("80|22","22|81|80");
+        parsing.put("80|28", null);
+        parsing.put("80|30","30|81|80");
+        parsing.put("80|31","31|81|80");
+        parsing.put("80|35", null);
+        parsing.put("80|37", null);
+        parsing.put("80|40", null);
+        parsing.put("80|41", null);
+        parsing.put("80|42", null);
+        parsing.put("80|43", null);
+        parsing.put("80|44", null);
+        parsing.put("80|45", null);
+        parsing.put("80|46", null);
+        parsing.put("80|47", null);
+        parsing.put("81|24","83|82");
+        parsing.put("81|25","83|82");
+        parsing.put("81|26","83|82");
+        parsing.put("81|36","83|82");
+        parsing.put("82|7", null);
+        parsing.put("82|10", null);
+        parsing.put("82|14", null);
+        parsing.put("82|15", null);
+        parsing.put("82|17", null);
+        parsing.put("82|19", null);
+        parsing.put("82|22", null);
+        parsing.put("82|23","23|83|82");
+        parsing.put("82|28", null);
+        parsing.put("82|30", null);
+        parsing.put("82|31", null);
+        parsing.put("82|32","32|83|82");
+        parsing.put("82|33","33|83|82");
+        parsing.put("82|35", null);
+        parsing.put("82|37", null);
+        parsing.put("82|40", null);
+        parsing.put("82|41", null);
+        parsing.put("82|42", null);
+        parsing.put("82|43", null);
+        parsing.put("82|44", null);
+        parsing.put("82|45", null);
+        parsing.put("82|46", null);
+        parsing.put("82|47", null);
+        parsing.put("83|24","24|83");
+        parsing.put("83|25","72");
+        parsing.put("83|26","26");
+        parsing.put("83|36","36|77|37");
+        parsing.put("84|26","26|86|39|66|85");
+        parsing.put("85|7", null);
+        parsing.put("85|47","47|84");
+        parsing.put("86|39", null);
+        parsing.put("86|46","46|26|86");
 
     }
 
