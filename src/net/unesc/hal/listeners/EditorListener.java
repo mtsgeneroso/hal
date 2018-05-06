@@ -58,6 +58,7 @@ public class EditorListener implements ActionListener {
                 ed.setErrors(lex.getErrors());
                 if(lex.getErrors().isEmpty()) {
                     Syntactic syn = new Syntactic(tokens, ed.getFiniteAutomaton());
+                    ed.setErrors(syn.getErrors());
                 }
                 break;
             default:

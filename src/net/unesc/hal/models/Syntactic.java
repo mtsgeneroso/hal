@@ -12,6 +12,7 @@ import net.unesc.hal.languages.HAL;
 public class Syntactic {
 
     private ArrayList<String[]> lexicon;
+    private ArrayList<String[]> errors;
     private ArrayList<Integer> stack;
     private HAL lang;
     private ArrayList<Token> non_terminals;
@@ -22,6 +23,7 @@ public class Syntactic {
         this.lang = fa.getLang();
         this.non_terminals = this.lang.getNonTerminals();
         this.parsing = this.lang.getParsing();
+        this.errors = new ArrayList<>();
         run();
     }
 
@@ -54,6 +56,7 @@ public class Syntactic {
                     System.out.println("- - -");
                 } else {
                     // Se forem terminais diferentes é disparado um erro.
+                    addError(new Integer(lexicon.get(0)[0]), "Código com erro: " + lang.getTerminal(stk).getName() + " : " + lang.getTerminal(lex).getName());
                     System.out.println("Código com erro: " + lang.getTerminal(stk).getName() + " : " + lang.getTerminal(lex).getName());
                     break;
                 }
@@ -111,6 +114,17 @@ public class Syntactic {
         }
         System.out.println("");
 
+    }
+    
+    public ArrayList<String[]> getErrors() {
+        return errors;
+    }
+    
+    private void addError(Integer line, String msg) {
+        String[] adition = new String[3];
+        adition[0] = line.toString();
+        adition[1] = msg;
+        errors.add(adition);
     }
 
 }
