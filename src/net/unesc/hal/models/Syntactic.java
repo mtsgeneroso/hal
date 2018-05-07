@@ -14,6 +14,7 @@ public class Syntactic {
     private ArrayList<String[]> lexicon;
     private ArrayList<String[]> errors;
     private ArrayList<Integer> stack;
+    private ArrayList<String> stacks;
     private HAL lang;
     private ArrayList<Token> non_terminals;
     private Map<String, String> parsing;
@@ -24,6 +25,7 @@ public class Syntactic {
         this.non_terminals = this.lang.getNonTerminals();
         this.parsing = this.lang.getParsing();
         this.errors = new ArrayList<>();
+        this.stacks = new ArrayList<>();
         run();
     }
 
@@ -53,6 +55,7 @@ public class Syntactic {
                     System.out.println("Códigos iguais");
                     lexicon.remove(0);
                     stack.remove(0);
+                    printStack();
                     System.out.println("- - -");
                 } else {
                     // Se forem terminais diferentes é disparado um erro.
@@ -107,13 +110,20 @@ public class Syntactic {
         for (Object d : derivation) {
             stack.add(0, new Integer(d.toString()));
         }
-
+        
+        printStack();
+    }
+    
+    private void printStack(){
+        String out = new String();
+        out = " ";
+        
         System.out.println("Pilha: ");
         for (Integer d : stack) {
-            System.out.print(d + " | ");
+            out += d + " | ";
         }
-        System.out.println("");
-
+        stacks.add(out);
+        System.out.println(out);
     }
     
     public ArrayList<String[]> getErrors() {
@@ -125,6 +135,10 @@ public class Syntactic {
         adition[0] = line.toString();
         adition[1] = msg;
         errors.add(adition);
+    }
+    
+    public ArrayList<String> getStacks() {
+        return stacks;
     }
 
 }

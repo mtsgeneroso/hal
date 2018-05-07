@@ -1,5 +1,6 @@
 package net.unesc.hal.views;
 
+import java.awt.Color;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.table.DefaultTableModel;
@@ -55,13 +56,33 @@ public class Editor extends javax.swing.JFrame {
             tbModel.addRow(tokens.get(i));
         }
                 
-        tbAnalysis.setModel(tbModel);   
+        tbLexicon.setModel(tbModel);   
+    }
+    
+    public void setStacks(ArrayList<String> stacks) {
+        // TODO: Poupulate Tokens table
+        
+        DefaultTableModel tbModel = new DefaultTableModel();
+        
+        tbModel.addColumn("Pilha");
+        
+        for(int i = 0; i < stacks.size(); i++){
+            tbModel.addRow(new String[]{stacks.get(i)});
+        }
+                
+        tbSyntatic.setModel(tbModel);   
+    }
+    
+    public void clearStacks(){
+        ArrayList<String> stacks = new ArrayList<>();
+        setStacks(stacks);
     }
     
     public void clearTokens(){
         ArrayList<String[]> tokens = new ArrayList<>();
         setTokens(tokens);
     }
+    
     public void clearErrors(){
         txaErrors.setText("");
         pnDebug.setVisible(false);
@@ -70,7 +91,7 @@ public class Editor extends javax.swing.JFrame {
     public void setErrors(ArrayList<String[]> tokens) {
         
         for(int i = 0; i < tokens.size(); i++){
-            txaErrors.setText(tokens.get(i)[0] + " : " + tokens.get(i)[1]);
+            txaErrors.setText("Linha: " + tokens.get(i)[0] + " -> " + tokens.get(i)[1]);
         }
         
         pnDebug.setVisible(true);
@@ -113,6 +134,8 @@ public class Editor extends javax.swing.JFrame {
          
         spEditor.setRowHeaderView(txtLineNumber);
         
+        txaErrors.setDisabledTextColor(Color.BLACK);
+        
         pnEditor.add(spEditor);
         pnDebug.setVisible(false);
         
@@ -128,8 +151,11 @@ public class Editor extends javax.swing.JFrame {
         pnDebug = new javax.swing.JPanel();
         splitDebug = new javax.swing.JSplitPane();
         pnAnalysis = new javax.swing.JPanel();
-        spAnalysisDebug = new javax.swing.JScrollPane();
-        tbAnalysis = new javax.swing.JTable();
+        tabsResults = new javax.swing.JTabbedPane();
+        spLexiconDebug = new javax.swing.JScrollPane();
+        tbLexicon = new javax.swing.JTable();
+        spSyntaticDebug = new javax.swing.JScrollPane();
+        tbSyntatic = new javax.swing.JTable();
         pnErrors = new javax.swing.JPanel();
         spErrors = new javax.swing.JScrollPane();
         txaErrors = new javax.swing.JTextArea();
@@ -157,7 +183,7 @@ public class Editor extends javax.swing.JFrame {
         splitMain.setDividerLocation((int) (this.getBounds().getWidth() / 2));
         splitMain.setDividerSize(9);
         splitMain.setToolTipText("Redimensione horizontalmente o painel de código e debug");
-        splitMain.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        splitMain.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         pnEditor.setName(""); // NOI18N
         pnEditor.setOpaque(false);
@@ -171,7 +197,7 @@ public class Editor extends javax.swing.JFrame {
         splitDebug.setBorder(null);
         splitDebug.setDividerSize(9);
         splitDebug.setOrientation(javax.swing.JSplitPane.VERTICAL_SPLIT);
-        splitDebug.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        splitDebug.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         pnAnalysis.setBackground(new java.awt.Color(0, 43, 54));
         pnAnalysis.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Resultado", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
@@ -179,12 +205,12 @@ public class Editor extends javax.swing.JFrame {
         pnAnalysis.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnAnalysis.setLayout(new javax.swing.BoxLayout(pnAnalysis, javax.swing.BoxLayout.LINE_AXIS));
 
-        spAnalysisDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        spAnalysisDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spLexiconDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spLexiconDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
 
-        tbAnalysis.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        tbAnalysis.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
-        tbAnalysis.setModel(new javax.swing.table.DefaultTableModel(
+        tbLexicon.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tbLexicon.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tbLexicon.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
                 {null, null, null}
             },
@@ -207,18 +233,61 @@ public class Editor extends javax.swing.JFrame {
                 return canEdit [columnIndex];
             }
         });
-        tbAnalysis.setGridColor(new java.awt.Color(204, 204, 204));
-        tbAnalysis.getTableHeader().setReorderingAllowed(false);
-        spAnalysisDebug.setViewportView(tbAnalysis);
-        if (tbAnalysis.getColumnModel().getColumnCount() > 0) {
-            tbAnalysis.getColumnModel().getColumn(0).setResizable(false);
-            tbAnalysis.getColumnModel().getColumn(0).setPreferredWidth(5);
-            tbAnalysis.getColumnModel().getColumn(1).setResizable(false);
-            tbAnalysis.getColumnModel().getColumn(1).setPreferredWidth(5);
-            tbAnalysis.getColumnModel().getColumn(2).setResizable(false);
+        tbLexicon.setGridColor(new java.awt.Color(204, 204, 204));
+        tbLexicon.getTableHeader().setReorderingAllowed(false);
+        spLexiconDebug.setViewportView(tbLexicon);
+        if (tbLexicon.getColumnModel().getColumnCount() > 0) {
+            tbLexicon.getColumnModel().getColumn(0).setResizable(false);
+            tbLexicon.getColumnModel().getColumn(0).setPreferredWidth(5);
+            tbLexicon.getColumnModel().getColumn(1).setResizable(false);
+            tbLexicon.getColumnModel().getColumn(1).setPreferredWidth(5);
+            tbLexicon.getColumnModel().getColumn(1).setHeaderValue("Código");
+            tbLexicon.getColumnModel().getColumn(2).setResizable(false);
+            tbLexicon.getColumnModel().getColumn(2).setHeaderValue("Token");
         }
 
-        pnAnalysis.add(spAnalysisDebug);
+        tabsResults.addTab("Léxico", spLexiconDebug);
+
+        spSyntaticDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        spSyntaticDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+
+        tbSyntatic.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        tbSyntatic.setFont(new java.awt.Font("Segoe UI", 0, 11)); // NOI18N
+        tbSyntatic.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null}
+            },
+            new String [] {
+                "Pilha"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        tbSyntatic.setGridColor(new java.awt.Color(204, 204, 204));
+        tbSyntatic.getTableHeader().setReorderingAllowed(false);
+        spSyntaticDebug.setViewportView(tbSyntatic);
+        if (tbSyntatic.getColumnModel().getColumnCount() > 0) {
+            tbSyntatic.getColumnModel().getColumn(0).setResizable(false);
+            tbSyntatic.getColumnModel().getColumn(0).setPreferredWidth(5);
+        }
+
+        tabsResults.addTab("Sintático", spSyntaticDebug);
+
+        pnAnalysis.add(tabsResults);
+        tabsResults.getAccessibleContext().setAccessibleName("Results");
 
         splitDebug.setLeftComponent(pnAnalysis);
 
@@ -237,7 +306,7 @@ public class Editor extends javax.swing.JFrame {
 
         txaErrors.setColumns(20);
         txaErrors.setRows(5);
-        txaErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.TEXT_CURSOR));
+        txaErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txaErrors.setEnabled(false);
         txaErrors.setFocusable(false);
         txaErrors.setPreferredSize(new java.awt.Dimension(164, 100));
@@ -264,25 +333,25 @@ public class Editor extends javax.swing.JFrame {
 
         mnFile.setForeground(new java.awt.Color(255, 255, 255));
         mnFile.setText("Arquivo");
-        mnFile.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mnFile.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         smNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
         smNew.setText("Novo");
-        smNew.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smNew.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         smNew.setIconTextGap(8);
         smNew.setPreferredSize(new java.awt.Dimension(120, 30));
         mnFile.add(smNew);
 
         smOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
         smOpen.setText("Abrir");
-        smOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         smOpen.setIconTextGap(8);
         smOpen.setPreferredSize(new java.awt.Dimension(120, 30));
         mnFile.add(smOpen);
 
         smSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
         smSave.setText("Salvar");
-        smSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         smSave.setIconTextGap(8);
         smSave.setPreferredSize(new java.awt.Dimension(120, 30));
         mnFile.add(smSave);
@@ -290,7 +359,7 @@ public class Editor extends javax.swing.JFrame {
 
         smClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
         smClose.setText("Fechar");
-        smClose.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smClose.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         smClose.setIconTextGap(8);
         smClose.setPreferredSize(new java.awt.Dimension(120, 30));
         mnFile.add(smClose);
@@ -299,12 +368,12 @@ public class Editor extends javax.swing.JFrame {
 
         mnRunner.setForeground(new java.awt.Color(255, 255, 255));
         mnRunner.setText("Executar");
-        mnRunner.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        mnRunner.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         smRunLexicon.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.CTRL_MASK));
         smRunLexicon.setText("Léxico");
         smRunLexicon.setBorder(null);
-        smRunLexicon.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        smRunLexicon.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         smRunLexicon.setDoubleBuffered(true);
         smRunLexicon.setIconTextGap(8);
         smRunLexicon.setPreferredSize(new java.awt.Dimension(177, 30));
@@ -343,11 +412,14 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JMenuItem smOpen;
     private javax.swing.JMenuItem smRunLexicon;
     private javax.swing.JMenuItem smSave;
-    private javax.swing.JScrollPane spAnalysisDebug;
     private javax.swing.JScrollPane spErrors;
+    private javax.swing.JScrollPane spLexiconDebug;
+    private javax.swing.JScrollPane spSyntaticDebug;
     private javax.swing.JSplitPane splitDebug;
     private javax.swing.JSplitPane splitMain;
-    private javax.swing.JTable tbAnalysis;
+    private javax.swing.JTabbedPane tabsResults;
+    private javax.swing.JTable tbLexicon;
+    private javax.swing.JTable tbSyntatic;
     private javax.swing.JTextArea txaErrors;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JEditorPane fieldEditor;
