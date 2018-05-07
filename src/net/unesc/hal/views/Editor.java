@@ -1,12 +1,18 @@
 package net.unesc.hal.views;
 
 import java.awt.Color;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.unesc.hal.controllers.FiniteAutomaton;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.languages.HAL;
+import net.unesc.hal.listeners.ButtonListener;
 import net.unesc.hal.listeners.EditorListener;
 import net.unesc.hal.utils.TextLineNumber;
 import net.unesc.hal.utils.TextPanelHighLight;
@@ -17,13 +23,16 @@ import net.unesc.hal.utils.TextPanelHighLight;
  */
 public class Editor extends javax.swing.JFrame {
     
-    public static final String SAVE = "Salvar";
-    public static final String OPEN = "Abrir";
-    public static final String CLOSE = "Fechar";
-    public static final String NEW = "Novo";
-    public static final String LEXICON = "Léxico";
+    public static final String SAVE = "SALVAR";
+    public static final String OPEN = "ABRIR";
+    public static final String CLOSE = "FECHAR";
+    public static final String NEW = "NOVO";
+    public static final String RUN = "EXECUTAR";
     
     private FiniteAutomaton fa;
+    private String latestVersionCode = "";
+    private boolean unsaved = false;
+    private String path = "";
     
     public Editor() {
         initComponents();
@@ -35,12 +44,27 @@ public class Editor extends javax.swing.JFrame {
         return fa;
     }
     
+    public String getPath(){
+        return this.path;
+    }
+    
+    public void setPath(String path){
+        this.path = path;
+        updateLatestVersion(fieldEditor.getText());
+    }
+    
     public Source getSource() {
         return new Source(fieldEditor.getText());
     }
     
     public void setSource(String value){
         fieldEditor.setText(value);
+        updateLatestVersion(fieldEditor.getText());
+    }
+    
+    public void updateLatestVersion(String code){
+        this.latestVersionCode = code;
+        checkCode();
     }
     
     public void setTokens(ArrayList<String[]> tokens) {
@@ -95,20 +119,41 @@ public class Editor extends javax.swing.JFrame {
         }
         
         pnDebug.setVisible(true);
-        splitDebug.setDividerLocation(400);
+        if(tokens.size() > 0)
+            splitDebug.setDividerLocation(400);
     }
     
     private void initListener(){
         EditorListener el = new EditorListener(this);
-        smRunLexicon.addActionListener(el);
-        smNew.addActionListener(el);
-        smOpen.addActionListener(el);
-        smSave.addActionListener(el);
-        smClose.addActionListener(el);
+        ButtonListener bl = new ButtonListener();
+        
+        btnRun.addActionListener(el);
+        btnRun.addMouseListener(bl);
+        btnRun.setEnabled(false);
+        
+        btnNew.addActionListener(el);
+        btnNew.addMouseListener(bl);
+        
+        btnOpen.addActionListener(el);
+        btnOpen.addMouseListener(bl);
+        
+        btnSave.addActionListener(el);
+        btnSave.addMouseListener(bl);
                 
     }
     
-    private void initEditor(){       
+    private void initEditor(){
+        this.addWindowListener(new WindowAdapter() {
+            public void windowClosing(WindowEvent e) {
+                    if(unsaved){
+                        if(JOptionPane.showConfirmDialog(null, "Deseja salvar as alteraçãos antes de sair?", "Salvar alterações", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION){
+                            btnSave.doClick();
+                        };
+                    }
+                    e.getWindow().dispose();
+                }
+            }
+        );
         fa = new FiniteAutomaton(new HAL());
         
         setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
@@ -124,6 +169,22 @@ public class Editor extends javax.swing.JFrame {
         fieldEditor.setFont(new java.awt.Font("Monospaced", 0, 14));
         fieldEditor.setForeground(new java.awt.Color(252, 252, 250));
         fieldEditor.setName("");
+        fieldEditor.addKeyListener(new KeyListener() {
+            @Override
+            public void keyTyped(KeyEvent e) {
+                checkCode();
+            }
+
+            @Override
+            public void keyPressed(KeyEvent e) {
+                checkCode();
+            }
+
+            @Override
+            public void keyReleased(KeyEvent e) {
+                checkCode();
+            }
+        });
                 
         txtLineNumber.setBorderGap(8);
         txtLineNumber.setUpdateFont(true);
@@ -141,10 +202,29 @@ public class Editor extends javax.swing.JFrame {
         
     }
     
+    private void checkCode(){
+        String currentCode = fieldEditor.getText();
+        btnRun.setEnabled(!currentCode.isEmpty());
+        if(!latestVersionCode.equals(currentCode)) {
+            this.setTitle("HAL - Analisador *");
+            unsaved = true;
+        } else {
+            this.setTitle("HAL - Analisador");
+            unsaved = false;
+        }
+    };
+    
+    
     @SuppressWarnings("unchecked")
     // <editor-fold defaultstate="collapsed" desc="Generated Code">//GEN-BEGIN:initComponents
     private void initComponents() {
 
+        toolbar = new javax.swing.JPanel();
+        btnNew = new javax.swing.JButton();
+        btnOpen = new javax.swing.JButton();
+        btnSave = new javax.swing.JButton();
+        btnDIvider = new javax.swing.JSeparator();
+        btnRun = new javax.swing.JButton();
         pnMain = new javax.swing.JPanel();
         splitMain = new javax.swing.JSplitPane();
         pnEditor = new javax.swing.JPanel();
@@ -159,21 +239,73 @@ public class Editor extends javax.swing.JFrame {
         pnErrors = new javax.swing.JPanel();
         spErrors = new javax.swing.JScrollPane();
         txaErrors = new javax.swing.JTextArea();
-        mnBar = new javax.swing.JMenuBar();
-        mnFile = new javax.swing.JMenu();
-        smNew = new javax.swing.JMenuItem();
-        smOpen = new javax.swing.JMenuItem();
-        smSave = new javax.swing.JMenuItem();
-        smDivider = new javax.swing.JPopupMenu.Separator();
-        smClose = new javax.swing.JMenuItem();
-        mnRunner = new javax.swing.JMenu();
-        smRunLexicon = new javax.swing.JMenuItem();
 
-        setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
+        setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("H.A.L. - Analisador");
         setPreferredSize(new java.awt.Dimension(800, 600));
         setSize(new java.awt.Dimension(800, 600));
-        getContentPane().setLayout(new java.awt.GridLayout(1, 0));
+        getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
+
+        toolbar.setBackground(new java.awt.Color(0, 43, 54));
+        toolbar.setMaximumSize(new java.awt.Dimension(32767, 45));
+        toolbar.setMinimumSize(new java.awt.Dimension(10, 45));
+        toolbar.setPreferredSize(new java.awt.Dimension(10, 35));
+        toolbar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 5));
+
+        btnNew.setBackground(new java.awt.Color(7, 54, 66));
+        btnNew.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
+        btnNew.setForeground(new java.awt.Color(255, 255, 255));
+        btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/new.png"))); // NOI18N
+        btnNew.setText("NOVO");
+        btnNew.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnNew.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNew.setFocusable(false);
+        btnNew.setMaximumSize(new java.awt.Dimension(59, 25));
+        btnNew.setMinimumSize(new java.awt.Dimension(59, 25));
+        btnNew.setPreferredSize(new java.awt.Dimension(75, 25));
+        toolbar.add(btnNew);
+
+        btnOpen.setBackground(new java.awt.Color(7, 54, 66));
+        btnOpen.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
+        btnOpen.setForeground(new java.awt.Color(255, 255, 255));
+        btnOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/open.png"))); // NOI18N
+        btnOpen.setText("ABRIR");
+        btnOpen.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOpen.setFocusable(false);
+        btnOpen.setMaximumSize(new java.awt.Dimension(75, 25));
+        btnOpen.setMinimumSize(new java.awt.Dimension(75, 25));
+        btnOpen.setPreferredSize(new java.awt.Dimension(75, 25));
+        toolbar.add(btnOpen);
+
+        btnSave.setBackground(new java.awt.Color(7, 54, 66));
+        btnSave.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
+        btnSave.setForeground(new java.awt.Color(255, 255, 255));
+        btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/save.png"))); // NOI18N
+        btnSave.setText("SALVAR");
+        btnSave.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSave.setFocusable(false);
+        btnSave.setMaximumSize(new java.awt.Dimension(80, 25));
+        btnSave.setMinimumSize(new java.awt.Dimension(80, 25));
+        btnSave.setPreferredSize(new java.awt.Dimension(80, 25));
+        toolbar.add(btnSave);
+        toolbar.add(btnDIvider);
+
+        btnRun.setBackground(new java.awt.Color(7, 54, 66));
+        btnRun.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
+        btnRun.setForeground(new java.awt.Color(255, 255, 255));
+        btnRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/run.png"))); // NOI18N
+        btnRun.setText("EXECUTAR");
+        btnRun.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
+        btnRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRun.setFocusable(false);
+        btnRun.setMaximumSize(new java.awt.Dimension(100, 25));
+        btnRun.setMinimumSize(new java.awt.Dimension(100, 25));
+        btnRun.setPreferredSize(new java.awt.Dimension(100, 25));
+        toolbar.add(btnRun);
+
+        getContentPane().add(toolbar);
 
         pnMain.setBackground(new java.awt.Color(0, 43, 54));
         pnMain.setLayout(new java.awt.GridLayout(1, 1));
@@ -204,6 +336,8 @@ public class Editor extends javax.swing.JFrame {
         pnAnalysis.setToolTipText("");
         pnAnalysis.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnAnalysis.setLayout(new javax.swing.BoxLayout(pnAnalysis, javax.swing.BoxLayout.LINE_AXIS));
+
+        tabsResults.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
 
         spLexiconDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         spLexiconDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
@@ -325,93 +459,23 @@ public class Editor extends javax.swing.JFrame {
 
         getContentPane().add(pnMain);
 
-        mnBar.setBackground(new java.awt.Color(0, 43, 54));
-        mnBar.setBorder(null);
-        mnBar.setToolTipText("");
-        mnBar.setFont(new java.awt.Font("Segoe UI Light", 0, 12)); // NOI18N
-        mnBar.setPreferredSize(new java.awt.Dimension(104, 25));
-
-        mnFile.setForeground(new java.awt.Color(255, 255, 255));
-        mnFile.setText("Arquivo");
-        mnFile.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        smNew.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_N, java.awt.event.InputEvent.CTRL_MASK));
-        smNew.setText("Novo");
-        smNew.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        smNew.setIconTextGap(8);
-        smNew.setPreferredSize(new java.awt.Dimension(120, 30));
-        mnFile.add(smNew);
-
-        smOpen.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_O, java.awt.event.InputEvent.CTRL_MASK));
-        smOpen.setText("Abrir");
-        smOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        smOpen.setIconTextGap(8);
-        smOpen.setPreferredSize(new java.awt.Dimension(120, 30));
-        mnFile.add(smOpen);
-
-        smSave.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_S, java.awt.event.InputEvent.CTRL_MASK));
-        smSave.setText("Salvar");
-        smSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        smSave.setIconTextGap(8);
-        smSave.setPreferredSize(new java.awt.Dimension(120, 30));
-        mnFile.add(smSave);
-        mnFile.add(smDivider);
-
-        smClose.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_Q, java.awt.event.InputEvent.CTRL_MASK));
-        smClose.setText("Fechar");
-        smClose.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        smClose.setIconTextGap(8);
-        smClose.setPreferredSize(new java.awt.Dimension(120, 30));
-        mnFile.add(smClose);
-
-        mnBar.add(mnFile);
-
-        mnRunner.setForeground(new java.awt.Color(255, 255, 255));
-        mnRunner.setText("Executar");
-        mnRunner.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-
-        smRunLexicon.setAccelerator(javax.swing.KeyStroke.getKeyStroke(java.awt.event.KeyEvent.VK_F9, java.awt.event.InputEvent.CTRL_MASK));
-        smRunLexicon.setText("Léxico");
-        smRunLexicon.setBorder(null);
-        smRunLexicon.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
-        smRunLexicon.setDoubleBuffered(true);
-        smRunLexicon.setIconTextGap(8);
-        smRunLexicon.setPreferredSize(new java.awt.Dimension(177, 30));
-        smRunLexicon.setRequestFocusEnabled(false);
-        smRunLexicon.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                smRunLexiconActionPerformed(evt);
-            }
-        });
-        mnRunner.add(smRunLexicon);
-
-        mnBar.add(mnRunner);
-
-        setJMenuBar(mnBar);
-
+        getAccessibleContext().setAccessibleName("HAL - Analisador");
         getAccessibleContext().setAccessibleDescription("Analisador Léxico da Hybrid Access Language");
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
-    private void smRunLexiconActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_smRunLexiconActionPerformed
-    }//GEN-LAST:event_smRunLexiconActionPerformed
-
     // Variables declaration - do not modify//GEN-BEGIN:variables
-    private javax.swing.JMenuBar mnBar;
-    private javax.swing.JMenu mnFile;
-    private javax.swing.JMenu mnRunner;
+    private javax.swing.JSeparator btnDIvider;
+    private javax.swing.JButton btnNew;
+    private javax.swing.JButton btnOpen;
+    private javax.swing.JButton btnRun;
+    private javax.swing.JButton btnSave;
     private javax.swing.JPanel pnAnalysis;
     private javax.swing.JPanel pnDebug;
     private javax.swing.JPanel pnEditor;
     private javax.swing.JPanel pnErrors;
     private javax.swing.JPanel pnMain;
-    private javax.swing.JMenuItem smClose;
-    private javax.swing.JPopupMenu.Separator smDivider;
-    private javax.swing.JMenuItem smNew;
-    private javax.swing.JMenuItem smOpen;
-    private javax.swing.JMenuItem smRunLexicon;
-    private javax.swing.JMenuItem smSave;
     private javax.swing.JScrollPane spErrors;
     private javax.swing.JScrollPane spLexiconDebug;
     private javax.swing.JScrollPane spSyntaticDebug;
@@ -420,6 +484,7 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JTabbedPane tabsResults;
     private javax.swing.JTable tbLexicon;
     private javax.swing.JTable tbSyntatic;
+    private javax.swing.JPanel toolbar;
     private javax.swing.JTextArea txaErrors;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JEditorPane fieldEditor;

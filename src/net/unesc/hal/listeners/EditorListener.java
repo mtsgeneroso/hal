@@ -24,6 +24,7 @@ public class EditorListener implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         String cmd = e.getActionCommand();
+        
         try {
             handle(cmd);
         } catch (EditorException ex) {
@@ -38,10 +39,10 @@ public class EditorListener implements ActionListener {
         
         switch (cmd) {
             case Editor.SAVE:
-                File.write(src.getCode(), ed);
+                ed.setPath(File.write(src.getCode(), ed, ed.getPath()));
                 break;
             case Editor.OPEN:
-                ed.setSource(File.read(ed).toString());
+                ed.setSource(File.read(ed, ""));
                 break;
             case Editor.CLOSE:
                 ed.dispose();
@@ -49,7 +50,7 @@ public class EditorListener implements ActionListener {
             case Editor.NEW:
                 ed.setSource("");
                 break;
-            case Editor.LEXICON:
+            case Editor.RUN:
                 ed.clearTokens();
                 ed.clearErrors();
                 Lexicon lex = new Lexicon(src, ed.getFiniteAutomaton());

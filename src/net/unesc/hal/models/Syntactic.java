@@ -59,8 +59,8 @@ public class Syntactic {
                     System.out.println("- - -");
                 } else {
                     // Se forem terminais diferentes é disparado um erro.
-                    addError(new Integer(lexicon.get(0)[0]), "Código com erro: " + lang.getTerminal(stk).getName() + " : " + lang.getTerminal(lex).getName());
-                    System.out.println("Código com erro: " + lang.getTerminal(stk).getName() + " : " + lang.getTerminal(lex).getName());
+                    addError(new Integer(lexicon.get(0)[0]), "Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
+                    System.out.println("Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
                     break;
                 }
 

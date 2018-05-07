@@ -5,9 +5,10 @@ procedure p;
 var 
     a :integer; 
 begin 
+    a:=2000;
     readln(a); 
     if a=x then
-        z:=z+x 
+        z:=z+x
     else begin 
         z:=z-x;   
         call p; 
@@ -23,7 +24,5 @@ begin
         z:=z+x+y; 
     writeln(z); 
 end.
-
-
 
 

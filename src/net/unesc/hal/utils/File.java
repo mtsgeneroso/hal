@@ -7,6 +7,7 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintStream;
 import javax.swing.JFileChooser;
+import net.unesc.hal.views.Editor;
 
 /**
  *
@@ -14,22 +15,25 @@ import javax.swing.JFileChooser;
  */
 public class File {
 
-    public static void write(String str, Component comp) throws FileNotFoundException, IOException {
+    public static String write(String str, Editor comp, String path) throws FileNotFoundException, IOException {
         FileOutputStream arq = null;
         PrintStream ps = null;
         JFileChooser c = new JFileChooser();
-        String name =  "codigo.lms";
+        String name = "codigo.lms";
         String dir = "";
-        
-        int rVal = c.showSaveDialog(comp);
-        
-        if (rVal == JFileChooser.APPROVE_OPTION) {
-            name = c.getSelectedFile().getName();
-            dir = c.getCurrentDirectory().toString();
+
+        if (path.isEmpty()) {
+            int rVal = c.showSaveDialog(comp);
+
+            if (rVal == JFileChooser.APPROVE_OPTION) {
+                name = c.getSelectedFile().getName();
+                dir = c.getCurrentDirectory().toString();
+            }
+            path = dir + "/" + name;
         }
         try {
-            
-            java.io.File f = new java.io.File(dir + "/" + name);
+
+            java.io.File f = new java.io.File(path);
 
             System.out.println(f.getAbsolutePath());
 
@@ -38,6 +42,9 @@ public class File {
             try {
                 ps = new PrintStream(arq);
                 ps.println(str);
+
+                return path;
+
             } finally {
                 if (ps != null) {
                     ps.close();
@@ -51,23 +58,28 @@ public class File {
 
     }
 
-    public static StringBuilder read(Component comp) throws FileNotFoundException, IOException {
+    public static String read(Editor comp, String path) throws FileNotFoundException, IOException {
         StringBuilder result = new StringBuilder();
         FileInputStream arq = null;
         String dir = "";
         String name = "";
 
         JFileChooser c = new JFileChooser();
-        
-        int rVal = c.showOpenDialog(comp);
-        if (rVal == JFileChooser.APPROVE_OPTION) {
-            name = c.getSelectedFile().getName();
-            dir = c.getCurrentDirectory().toString();
+
+        if (path.isEmpty()) {
+
+            int rVal = c.showOpenDialog(comp);
+            if (rVal == JFileChooser.APPROVE_OPTION) {
+                name = c.getSelectedFile().getName();
+                dir = c.getCurrentDirectory().toString();
+            }
+            
+            path = dir + "/" + name;
         }
 
         try {
 
-            java.io.File f = new java.io.File(dir + "/" + name);
+            java.io.File f = new java.io.File(path);
             arq = new FileInputStream(f);
 
             int caracterlido = arq.read();
@@ -81,8 +93,8 @@ public class File {
                 arq.close();
             }
         }
-
-        return result;
+        comp.setPath(path);
+        return result.toString();
     }
 
 }
