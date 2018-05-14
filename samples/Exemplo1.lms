@@ -1,20 +1,20 @@
 program testeproc1; 
 var 
     x, y, z :integer; 
-procedure p; 
-var 
-    a :integer; 
-begin 
-    a:=2000;
-    readln(a); 
-    if a=x then
-        z:=z+x
-    else begin 
-        z:=z-x;   
-        call p; 
+    procedure p; 
+    var 
+        a :integer; 
+    begin 
+        a:=2000;
+        readln(a); 
+        if a=x then
+            z:=z+x
+        else begin 
+            z:=z-x;   
+            call p; 
+        end; 
+     (* comentario integer *)
     end; 
-(* comentario integer *)
-end; 
 begin 
     z:=0; 
     readln(x,y); 
@@ -24,5 +24,4 @@ begin
         z:=z+x+y; 
     writeln(z); 
 end.
-
 

@@ -28,6 +28,7 @@ public class Editor extends javax.swing.JFrame {
     public static final String CLOSE = "FECHAR";
     public static final String NEW = "NOVO";
     public static final String RUN = "EXECUTAR";
+    public static final String ABOUT = "SOBRE";
     
     private FiniteAutomaton fa;
     private String latestVersionCode = "";
@@ -119,8 +120,7 @@ public class Editor extends javax.swing.JFrame {
         }
         
         pnDebug.setVisible(true);
-        if(tokens.size() > 0)
-            splitDebug.setDividerLocation(400);
+        splitDebug.setDividerLocation(400);
     }
     
     private void initListener(){
@@ -139,6 +139,9 @@ public class Editor extends javax.swing.JFrame {
         
         btnSave.addActionListener(el);
         btnSave.addMouseListener(bl);
+        
+        btnAbout.addActionListener(el);
+        btnAbout.addMouseListener(bl);
                 
     }
     
@@ -220,11 +223,14 @@ public class Editor extends javax.swing.JFrame {
     private void initComponents() {
 
         toolbar = new javax.swing.JPanel();
+        toolbarLeft = new javax.swing.JPanel();
         btnNew = new javax.swing.JButton();
         btnOpen = new javax.swing.JButton();
         btnSave = new javax.swing.JButton();
         btnDIvider = new javax.swing.JSeparator();
         btnRun = new javax.swing.JButton();
+        toolbarRight = new javax.swing.JPanel();
+        btnAbout = new javax.swing.JButton();
         pnMain = new javax.swing.JPanel();
         splitMain = new javax.swing.JSplitPane();
         pnEditor = new javax.swing.JPanel();
@@ -250,7 +256,10 @@ public class Editor extends javax.swing.JFrame {
         toolbar.setMaximumSize(new java.awt.Dimension(32767, 45));
         toolbar.setMinimumSize(new java.awt.Dimension(10, 45));
         toolbar.setPreferredSize(new java.awt.Dimension(10, 35));
-        toolbar.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 5));
+        toolbar.setLayout(new javax.swing.BoxLayout(toolbar, javax.swing.BoxLayout.LINE_AXIS));
+
+        toolbarLeft.setBackground(new java.awt.Color(0, 43, 54));
+        toolbarLeft.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.LEFT, 8, 5));
 
         btnNew.setBackground(new java.awt.Color(7, 54, 66));
         btnNew.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
@@ -263,7 +272,7 @@ public class Editor extends javax.swing.JFrame {
         btnNew.setMaximumSize(new java.awt.Dimension(59, 25));
         btnNew.setMinimumSize(new java.awt.Dimension(59, 25));
         btnNew.setPreferredSize(new java.awt.Dimension(75, 25));
-        toolbar.add(btnNew);
+        toolbarLeft.add(btnNew);
 
         btnOpen.setBackground(new java.awt.Color(7, 54, 66));
         btnOpen.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
@@ -276,7 +285,7 @@ public class Editor extends javax.swing.JFrame {
         btnOpen.setMaximumSize(new java.awt.Dimension(75, 25));
         btnOpen.setMinimumSize(new java.awt.Dimension(75, 25));
         btnOpen.setPreferredSize(new java.awt.Dimension(75, 25));
-        toolbar.add(btnOpen);
+        toolbarLeft.add(btnOpen);
 
         btnSave.setBackground(new java.awt.Color(7, 54, 66));
         btnSave.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
@@ -289,8 +298,8 @@ public class Editor extends javax.swing.JFrame {
         btnSave.setMaximumSize(new java.awt.Dimension(80, 25));
         btnSave.setMinimumSize(new java.awt.Dimension(80, 25));
         btnSave.setPreferredSize(new java.awt.Dimension(80, 25));
-        toolbar.add(btnSave);
-        toolbar.add(btnDIvider);
+        toolbarLeft.add(btnSave);
+        toolbarLeft.add(btnDIvider);
 
         btnRun.setBackground(new java.awt.Color(7, 54, 66));
         btnRun.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
@@ -303,7 +312,27 @@ public class Editor extends javax.swing.JFrame {
         btnRun.setMaximumSize(new java.awt.Dimension(100, 25));
         btnRun.setMinimumSize(new java.awt.Dimension(100, 25));
         btnRun.setPreferredSize(new java.awt.Dimension(100, 25));
-        toolbar.add(btnRun);
+        toolbarLeft.add(btnRun);
+
+        toolbar.add(toolbarLeft);
+
+        toolbarRight.setBackground(new java.awt.Color(0, 43, 54));
+        toolbarRight.setLayout(new java.awt.FlowLayout(java.awt.FlowLayout.RIGHT, 8, 5));
+
+        btnAbout.setBackground(new java.awt.Color(7, 54, 66));
+        btnAbout.setFont(new java.awt.Font("Open Sans", 1, 12)); // NOI18N
+        btnAbout.setForeground(new java.awt.Color(255, 255, 255));
+        btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/info.png"))); // NOI18N
+        btnAbout.setText("SOBRE");
+        btnAbout.setBorder(null);
+        btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAbout.setFocusable(false);
+        btnAbout.setMaximumSize(new java.awt.Dimension(75, 25));
+        btnAbout.setMinimumSize(new java.awt.Dimension(75, 25));
+        btnAbout.setPreferredSize(new java.awt.Dimension(75, 25));
+        toolbarRight.add(btnAbout);
+
+        toolbar.add(toolbarRight);
 
         getContentPane().add(toolbar);
 
@@ -466,6 +495,7 @@ public class Editor extends javax.swing.JFrame {
     }// </editor-fold>//GEN-END:initComponents
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
+    private javax.swing.JButton btnAbout;
     private javax.swing.JSeparator btnDIvider;
     private javax.swing.JButton btnNew;
     private javax.swing.JButton btnOpen;
@@ -485,6 +515,8 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JTable tbLexicon;
     private javax.swing.JTable tbSyntatic;
     private javax.swing.JPanel toolbar;
+    private javax.swing.JPanel toolbarLeft;
+    private javax.swing.JPanel toolbarRight;
     private javax.swing.JTextArea txaErrors;
     // End of variables declaration//GEN-END:variables
     private javax.swing.JEditorPane fieldEditor;

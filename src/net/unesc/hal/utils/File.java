@@ -35,8 +35,6 @@ public class File {
 
             java.io.File f = new java.io.File(path);
 
-            System.out.println(f.getAbsolutePath());
-
             arq = new FileOutputStream(f);
 
             try {

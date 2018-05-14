@@ -6,10 +6,11 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import javax.swing.JOptionPane;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.exceptions.EditorException;
-import net.unesc.hal.models.Lexicon;
-import net.unesc.hal.models.Syntactic;
+import net.unesc.hal.compiler.Lexicon;
+import net.unesc.hal.compiler.Syntactic;
 import net.unesc.hal.utils.File;
 import net.unesc.hal.views.Editor;
 
@@ -38,6 +39,16 @@ public class EditorListener implements ActionListener {
         Source src = ed.getSource();
         
         switch (cmd) {
+            case Editor.ABOUT:
+                JOptionPane.showMessageDialog(null, ""
+                        + "UNESC - Universidade do Extremo Sul Catarinense"
+                        + "\n\nEquipe: "
+                        + "\n- Mateus Generoso e Aminatha Miguel"
+                        + "\n\nDisciplina:"
+                        + "\n- Compiladores 2018/1"
+                        + "\n\nProfessor:"
+                        + "\n- Gilberto Vieira", "Sobre", JOptionPane.INFORMATION_MESSAGE);
+                break;
             case Editor.SAVE:
                 ed.setPath(File.write(src.getCode(), ed, ed.getPath()));
                 break;

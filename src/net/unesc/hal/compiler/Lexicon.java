@@ -1,4 +1,4 @@
-package net.unesc.hal.models;
+package net.unesc.hal.compiler;
 
 import java.util.ArrayList;
 import net.unesc.hal.controllers.FiniteAutomaton;
@@ -39,11 +39,12 @@ public class Lexicon {
         errors.add(adition);
     }
 
-    private void addToken(Integer line, Token token) {
-        String[] adition = new String[3];
+    private void addToken(Integer line, Token token, String name) {
+        String[] adition = new String[4];
         adition[0] = line.toString();
         adition[1] = token.getCode().toString();
         adition[2] = token.getName();
+        adition[3] = name;
         tokens.add(adition);
     }
 
@@ -84,11 +85,11 @@ public class Lexicon {
             if (!buffer.isEmpty() && !is_comment_loop && !is_literal_loop) {
                 Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
-                    addToken(cur_line, token);
+                    addToken(cur_line, token, parseBuffer(buffer));
                 } else {
                     Integer inteiro = new Integer(parseBuffer(buffer));
                     if (inteiro >= -32767 && inteiro <= 32767) {
-                        addToken(cur_line, lang.INTEGER);
+                        addToken(cur_line, lang.INTEGER, parseBuffer(buffer));
                     } else {
                         this.addError(cur_line, "Limite excedido");
                         break;
@@ -123,7 +124,7 @@ public class Lexicon {
                 if (!buffer.isEmpty()) {
                     //System.out.println(cur_line + " : " + parseBuffer(buffer));
 
-                    addToken(cur_line, lang.IDENTIFIER);
+                    addToken(cur_line, lang.IDENTIFIER, parseBuffer(buffer));
                     buffer.clear();
                 }
             }
@@ -132,10 +133,10 @@ public class Lexicon {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
                 Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
-                    addToken(cur_line, token);
+                    addToken(cur_line, token, parseBuffer(buffer));
                 } else {
                     if (parseBuffer(buffer).length() <= 30) {
-                        addToken(cur_line, lang.IDENTIFIER);
+                        addToken(cur_line, lang.IDENTIFIER, parseBuffer(buffer));
                     } else {
                         this.addError(cur_line, "Limite excedido");
                         break;
@@ -173,7 +174,7 @@ public class Lexicon {
                             } else {
                                 Integer inteiro = new Integer(parseBuffer(buffer));
                                 if (inteiro >= -32767 && inteiro <= 32767) {
-                                    addToken(cur_line, lang.INTEGER);
+                                    addToken(cur_line, lang.INTEGER, parseBuffer(buffer));
                                     buffer.clear();
                                 } else {
                                     this.addError(cur_line, "Limite excedido");
@@ -206,7 +207,7 @@ public class Lexicon {
                     if (parseBuffer(buffer).equals(lang.LITERAL_END) && !is_comment_loop && is_literal_loop) {
                         is_literal_loop = false;
                         if (literal_count <= lang.LITERAL_LIMIT) {
-                            addToken(literal_line, lang.LITERAL);
+                            addToken(literal_line, lang.LITERAL, parseBuffer(buffer));
                         } else {
                             addError(cur_line, "Limite de literal excedido");
                             break;
@@ -243,7 +244,7 @@ public class Lexicon {
                 //System.out.println(cur_line + " : " + parseBuffer(buffer));
                 Token token = lang.getTerminal(parseBuffer(buffer));
                 if (token != null) {
-                    addToken(cur_line, token);
+                    addToken(cur_line, token, parseBuffer(buffer));
                 } else {
                     //System.out.println("Simbolo inexistente: " + parseBuffer(buffer));
                 }
@@ -268,7 +269,7 @@ public class Lexicon {
                     this.addError(cur_line, "Literal sem fechamento");
                     break;
                 }
-                addToken(cur_line, lang.EOF);
+                addToken(cur_line, lang.EOF, "EOF");
                 break;
             }
             while (cur_char.isSpace()) {

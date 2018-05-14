@@ -1,4 +1,4 @@
-package net.unesc.hal.models;
+package net.unesc.hal.compiler;
 
 import java.awt.List;
 import java.util.ArrayList;
@@ -18,6 +18,7 @@ public class Syntactic {
     private HAL lang;
     private ArrayList<Token> non_terminals;
     private Map<String, String> parsing;
+    private Semantic sem;
 
     public Syntactic(ArrayList<String[]> lexicon, FiniteAutomaton fa) {
         this.lexicon = lexicon;
@@ -26,117 +27,116 @@ public class Syntactic {
         this.parsing = this.lang.getParsing();
         this.errors = new ArrayList<>();
         this.stacks = new ArrayList<>();
+        this.sem = new Semantic(lexicon);
         run();
     }
 
     private void run() {
         stack = new ArrayList<>();
-
+        
         // Adiciona a regra inicial
         addDerivation(getParsing(52, 1));
 
         // Começa a percorrer a pilha de derivações até que fique vazia
         do {
-            
+
             // Armazena o primeiro token (código)
             Integer lex = new Integer(lexicon.get(0)[1]);
-            
+
             // Armazena o primeiro código da derivação
             Integer stk = new Integer(stack.get(0));
-            
-            System.out.println(stk + " : " + lex);
-            
+
+            // System.out.println(stk + " : " + lex);
             // Verifica se é terminal ou não-terminal ;P
             if (stk < 52) {
-                System.out.println("Terminal");
-                
+                // System.out.println("Terminal");
+
                 // Caso seja terminal e o topo do léxico e da pilha sejam iguais, ambos são removidos.
                 if (stk.equals(lex)) {
-                    System.out.println("Códigos iguais");
+                    // System.out.println("Códigos iguais");
                     lexicon.remove(0);
                     stack.remove(0);
                     printStack();
-                    System.out.println("- - -");
+                    // System.out.println("- - -");
                 } else {
                     // Se forem terminais diferentes é disparado um erro.
                     addError(new Integer(lexicon.get(0)[0]), "Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
-                    System.out.println("Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
+                    // System.out.println("Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
                     break;
                 }
 
             } else {
                 // Caso seja não-terminal é realizada a derivação
-                System.out.println("Não terminal");
-                
+                // System.out.println("Não terminal");
+
                 // Remove o não-terminal para não causar recursividade
                 stack.remove(0);
-                
+
                 // Adiciona os códigos de derivação no ínicio da pilha
                 addDerivation(getParsing(stk, lex));
-                System.out.println("- - -");
+                // System.out.println("- - -");
                 continue;
             }
 
         } while (!stack.isEmpty());
-        
-        System.out.println("Sintático concluído");
 
+        // System.out.println("Sintático concluído");
     }
 
     // Busca a derivação correspondente aos códigos
     public ArrayList getParsing(int c1, int c2) {
-        
-        System.out.println(c1 + "|" + c2);
+
+        // System.out.println(c1 + "|" + c2);
         String der = parsing.get(c1 + "|" + c2);
         ArrayList derivation;
-        if(der != null) {
+        if (der != null) {
             derivation = new ArrayList(Arrays.asList(der.split("\\|")));
-            System.out.println("Número de itens na derivação: " + derivation.size());
+            // System.out.println("Número de itens na derivação: " + derivation.size());
             return derivation;
         }
-        System.out.println("Derivação vazia");
+        // System.out.println("Derivação vazia");
         return null;
     }
 
     // Adiciona a derivação na pilha
     public void addDerivation(ArrayList derivation) {
-        
+
         if (derivation == null) {
             return;
         }
-        
+
         Collections.reverse(derivation);
 
         for (Object d : derivation) {
             stack.add(0, new Integer(d.toString()));
         }
-        
+
         printStack();
     }
-    
-    private void printStack(){
+
+    private void printStack() {
         String out = new String();
         out = " ";
-        
-        System.out.println("Pilha: ");
+
+        // System.out.println("Pilha: ");
         for (Integer d : stack) {
             out += d + " | ";
         }
         stacks.add(out);
-        System.out.println(out);
+        // System.out.println(out);
     }
-    
+
     public ArrayList<String[]> getErrors() {
         return errors;
     }
-    
+
     private void addError(Integer line, String msg) {
         String[] adition = new String[3];
         adition[0] = line.toString();
         adition[1] = msg;
         errors.add(adition);
     }
-    
+
     public ArrayList<String> getStacks() {
         return stacks;
     }
