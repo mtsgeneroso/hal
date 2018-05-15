@@ -33,6 +33,11 @@ public class Syntactic {
 
     private void run() {
         stack = new ArrayList<>();
+        ArrayList<String> ids = new ArrayList<>();
+        int begin = 0;
+        int end = 0;
+        int varLevel = 0;
+        boolean hasVar = false;
         
         // Adiciona a regra inicial
         addDerivation(getParsing(52, 1));
@@ -54,13 +59,36 @@ public class Syntactic {
                 // Caso seja terminal e o topo do léxico e da pilha sejam iguais, ambos são removidos.
                 if (stk.equals(lex)) {
                     // System.out.println("Códigos iguais");
+                    
+                    if (hasVar) {
+                        if(stk.equals(4)){
+                            varLevel++;
+                        System.out.println("LEVEL: " + varLevel);
+                        }
+                        
+                        if(stk.equals(6)){
+                            begin++;
+                        System.out.println("BEGIN: " + begin);
+                        }
+                        
+                        if(stk.equals(7)){
+                            end++;
+                        System.out.println("END: " + end);
+                        }
+                        
+                    } else if (stk.equals(4)) {
+                        hasVar = true;
+                        varLevel++;
+                        System.out.println("LEVEL: " + varLevel);
+                    }
+                    
                     lexicon.remove(0);
                     stack.remove(0);
                     printStack();
                     // System.out.println("- - -");
                 } else {
                     // Se forem terminais diferentes é disparado um erro.
-                    addError(new Integer(lexicon.get(0)[0]), "Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
+                    addError(new Integer(lexicon.get(0)[0]), "Token esperado '" + lang.getTerminal(stk).getName() + "' (" + stk + ") e foi lido '" + lang.getTerminal(lex).getName() + "' (" + lex + ")");
                     // System.out.println("Token esperado: " + lang.getTerminal(stk).getName() + " | lido: " + lang.getTerminal(lex).getName());
                     break;
                 }
@@ -71,6 +99,7 @@ public class Syntactic {
 
                 // Remove o não-terminal para não causar recursividade
                 stack.remove(0);
+                printStack();
 
                 // Adiciona os códigos de derivação no ínicio da pilha
                 addDerivation(getParsing(stk, lex));
@@ -86,7 +115,7 @@ public class Syntactic {
     // Busca a derivação correspondente aos códigos
     public ArrayList getParsing(int c1, int c2) {
 
-        // System.out.println(c1 + "|" + c2);
+        System.out.println(c1 + "|" + c2);
         String der = parsing.get(c1 + "|" + c2);
         ArrayList derivation;
         if (der != null) {
@@ -116,14 +145,24 @@ public class Syntactic {
 
     private void printStack() {
         String out = new String();
+        String outfull = new String();
+        
         out = " ";
+        outfull = " ";
+        
 
         // System.out.println("Pilha: ");
         for (Integer d : stack) {
             out += d + " | ";
+            
+            if(d < 52) {
+                outfull += lang.getTerminal(d).getName() + " | ";
+            } else {
+                outfull += lang.getNonTerminal(d).getName() + " | ";
+            }
         }
         stacks.add(out);
-        // System.out.println(out);
+        //System.out.println(outfull);
     }
 
     public ArrayList<String[]> getErrors() {

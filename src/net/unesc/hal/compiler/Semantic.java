@@ -51,17 +51,22 @@ public class Semantic {
         int level = 0;
         
         for(int i = 0; i < lexicon.size(); i++){
+           
+            /*
             
-            if(lexicon.get(i)[1].equals("25")) {
+            if(lexicon.get(i)[1].equals("25")) { // Identificador;
                 System.out.println("TOKEN: " + lexicon.get(i)[3]);
             }
             
             if(lexicon.get(i)[1].equals("4") || lexicon.get(i)[1].equals("3")) {
                 System.out.println("VAR ou CONST: " + ++level);
             }
+            
             if(lexicon.get(i)[1].equals("7")) {
                 System.out.println("END: " + --level);
             }
+            */
+            
         }
     
     }

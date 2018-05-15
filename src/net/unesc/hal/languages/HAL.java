@@ -31,7 +31,7 @@ public class HAL implements Language {
     public Token getTerminal(String str) {
 
         for (int i = 0; i < terminals.size(); i++) {
-            if (str.equals(terminals.get(i).getName())) {
+            if (str.toLowerCase().equals(terminals.get(i).getName())) {
                 return terminals.get(i);
             }
         }
@@ -204,11 +204,11 @@ public class HAL implements Language {
         non_terminals.add(new Token(87, "SEMEFEITO"));
         
         parsing.put("52|1","1|25|47|53|49");
-        parsing.put("53|2","54|56|59|62|64");
-        parsing.put("53|3","54|56|59|62|64");
-        parsing.put("53|4","54|56|59|62|64");
-        parsing.put("53|5","54|56|59|62|64");
-        parsing.put("53|6","54|56|59|62|64");
+        parsing.put("53|2","54|57|59|62|64");
+        parsing.put("53|3","54|57|59|62|64");
+        parsing.put("53|4","54|57|59|62|64");
+        parsing.put("53|5","54|57|59|62|64");
+        parsing.put("53|6","54|57|59|62|64");
         parsing.put("54|2","2|55|47");
         parsing.put("54|3", null);
         parsing.put("54|4", null);
@@ -233,7 +233,7 @@ public class HAL implements Language {
         parsing.put("60|6", null);
         parsing.put("60|25","55|39|61|47|60");
         parsing.put("61|8","8");
-        parsing.put("61|9","9|34|26|50|26|35|11|8");
+        parsing.put("61|9","9|34|26|50|26|35|10|8");
         parsing.put("62|5","5|25|63|47|53|47|62");
         parsing.put("62|6", null);
         parsing.put("63|36","36|55|39|8|37");
@@ -255,7 +255,7 @@ public class HAL implements Language {
         parsing.put("66|21","21|36|75|76|37");
         parsing.put("66|25","25|67");
         parsing.put("66|27","27|25|38|77|28|77|17|66");
-        parsing.put("66|29","29|77|11|84|7");
+        parsing.put("66|29","29|77|10|84|7");
         parsing.put("66|47", null);
         parsing.put("67|34","68|38|77");
         parsing.put("67|38","68|38|77");

@@ -35,7 +35,7 @@ public class Source {
             String[] cols = rows[i].split("");
             
             for (int j = 0; j < cols.length; j++) {
-                if(!cols[j].isEmpty()) {
+                if(!cols[j].isEmpty() && !cols[j].matches("\\t")) {
                     chars.add(new Char(cols[j].charAt(0)));
                 } else {
                     chars.add(new Char((" ").charAt(0)));

@@ -25,7 +25,7 @@ public class Char {
         endFile = character.equals(EOF);
         endLine = character.equals(EOL);
         num = Character.isDigit(character);
-        letter = Character.isAlphabetic(character);
+        letter = Character.isAlphabetic(character) || character.toString().matches("_");
         symbol = character.toString().matches("(\\+|\\-|\\*|\\/|\\[|\\]|\\(|\\)|\\:|\\=|\\>|\\<|\\,|\\;|\\.|\\')");
         
         
