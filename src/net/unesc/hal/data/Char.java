@@ -69,7 +69,7 @@ public class Char {
 
     @Override
     public String toString() {
-        return character.toString();
+        return (character != null) ? character.toString() : "";
     }
 
     public boolean isSymbol() {

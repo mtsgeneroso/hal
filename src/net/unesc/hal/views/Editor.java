@@ -22,151 +22,156 @@ import net.unesc.hal.utils.TextPanelHighLight;
  * @author Mateus Generoso
  */
 public class Editor extends javax.swing.JFrame {
-    
+
     public static final String SAVE = "SALVAR";
     public static final String OPEN = "ABRIR";
     public static final String CLOSE = "FECHAR";
     public static final String NEW = "NOVO";
     public static final String RUN = "EXECUTAR";
     public static final String ABOUT = "SOBRE";
-    
+
     private FiniteAutomaton fa;
     private String latestVersionCode = "";
     private boolean unsaved = false;
     private String path = "";
-    
+
     public Editor() {
         initComponents();
         initEditor();
         initListener();
     }
-    
-    public FiniteAutomaton getFiniteAutomaton(){
+
+    public FiniteAutomaton getFiniteAutomaton() {
         return fa;
     }
-    
-    public String getPath(){
+
+    public String getPath() {
         return this.path;
     }
-    
-    public void setPath(String path){
+
+    public void setPath(String path) {
         this.path = path;
         updateLatestVersion(fieldEditor.getText());
     }
-    
+
     public Source getSource() {
         return new Source(fieldEditor.getText());
     }
-    
-    public void setSource(String value){
+
+    public void setSource(String value) {
         fieldEditor.setText(value);
         updateLatestVersion(fieldEditor.getText());
     }
-    
-    public void updateLatestVersion(String code){
+
+    public void updateLatestVersion(String code) {
         this.latestVersionCode = code;
         checkCode();
     }
-    
+
     public void setTokens(ArrayList<String[]> tokens) {
         // TODO: Poupulate Tokens table
-        
+
         DefaultTableModel tbModel = new DefaultTableModel();
-        
+
         tbModel.addColumn("Linha");
         tbModel.addColumn("Código");
         tbModel.addColumn("Token");
-        
-        for(int i = 0; i < tokens.size(); i++){
+
+        for (int i = 0; i < tokens.size(); i++) {
             tbModel.addRow(tokens.get(i));
         }
-                
-        tbLexicon.setModel(tbModel);   
+
+        tbLexicon.setModel(tbModel);
     }
-    
+
     public void setStacks(ArrayList<String> stacks) {
         // TODO: Poupulate Tokens table
-        
+
         DefaultTableModel tbModel = new DefaultTableModel();
-        
+
         tbModel.addColumn("Pilha");
-        
-        for(int i = 0; i < stacks.size(); i++){
+
+        for (int i = 0; i < stacks.size(); i++) {
             tbModel.addRow(new String[]{stacks.get(i)});
         }
-                
-        tbSyntatic.setModel(tbModel);   
+
+        tbSyntatic.setModel(tbModel);
     }
-    
-    public void clearStacks(){
+
+    public void clearStacks() {
         ArrayList<String> stacks = new ArrayList<>();
         setStacks(stacks);
     }
-    
-    public void clearTokens(){
+
+    public void clearTokens() {
         ArrayList<String[]> tokens = new ArrayList<>();
         setTokens(tokens);
     }
-    
-    public void clearErrors(){
+
+    public void clearErrors() {
         txaErrors.setText("");
         pnDebug.setVisible(false);
     }
-    
+
     public void setErrors(ArrayList<String[]> tokens) {
-        
-        for(int i = 0; i < tokens.size(); i++){
+
+        if (tokens.isEmpty()) {
+            txaErrors.setText("✓ Compilado com sucesso!");
+        }
+
+        for (int i = 0; i < tokens.size(); i++) {
             txaErrors.setText("Linha: " + tokens.get(i)[0] + " -> " + tokens.get(i)[1]);
         }
-        
+
+        spErrors.setVisible(true);
         pnDebug.setVisible(true);
-        splitDebug.setDividerLocation(400);
+        splitDebug.setDividerLocation(410);
     }
-    
-    private void initListener(){
+
+    private void initListener() {
         EditorListener el = new EditorListener(this);
         ButtonListener bl = new ButtonListener();
-        
+
         btnRun.addActionListener(el);
         btnRun.addMouseListener(bl);
         btnRun.setEnabled(false);
-        
+
         btnNew.addActionListener(el);
         btnNew.addMouseListener(bl);
-        
+
         btnOpen.addActionListener(el);
         btnOpen.addMouseListener(bl);
-        
+
         btnSave.addActionListener(el);
         btnSave.addMouseListener(bl);
-        
+
         btnAbout.addActionListener(el);
         btnAbout.addMouseListener(bl);
-                
+
     }
-    
-    private void initEditor(){
+
+    private void initEditor() {
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
-                    if(unsaved){
-                        if(JOptionPane.showConfirmDialog(null, "Deseja salvar as alteraçãos antes de sair?", "Salvar alterações", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION){
-                            btnSave.doClick();
-                        };
-                    }
-                    e.getWindow().dispose();
+                if (unsaved) {
+                    if (JOptionPane.showConfirmDialog(null, "Deseja salvar as alteraçãos antes de sair?", "Salvar alterações", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                        btnSave.doClick();
+                    };
                 }
+                e.getWindow().dispose();
             }
+        }
         );
         fa = new FiniteAutomaton(new HAL());
-        
+
         setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
-        
+
         fieldEditor = new TextPanelHighLight();
         spEditor = new javax.swing.JScrollPane(fieldEditor);
         txtLineNumber = new TextLineNumber(fieldEditor);
-        
+
         spEditor.setBorder(null);
-        
+
         fieldEditor.setBackground(new java.awt.Color(7, 54, 66));
         fieldEditor.setBorder(null);
         fieldEditor.setFont(new java.awt.Font("Monospaced", 0, 14));
@@ -188,34 +193,36 @@ public class Editor extends javax.swing.JFrame {
                 checkCode();
             }
         });
-                
+
         txtLineNumber.setBorderGap(8);
         txtLineNumber.setUpdateFont(true);
         txtLineNumber.setBackground(new java.awt.Color(0, 43, 54));
         txtLineNumber.setFont(new java.awt.Font("Monospaced", 0, 14));
         txtLineNumber.setForeground(new java.awt.Color(252, 252, 250));
         txtLineNumber.setCurrentLineForeground(new java.awt.Color(252, 252, 250));
-         
+
         spEditor.setRowHeaderView(txtLineNumber);
-        
+
         txaErrors.setDisabledTextColor(Color.BLACK);
-        
+
         pnEditor.add(spEditor);
         pnDebug.setVisible(false);
-        
+
     }
-    
-    private void checkCode(){
+
+    private void checkCode() {
         String currentCode = fieldEditor.getText();
         btnRun.setEnabled(!currentCode.isEmpty());
-        if(!latestVersionCode.equals(currentCode)) {
+        if (!latestVersionCode.equals(currentCode)) {
             this.setTitle("HAL - Analisador *");
             unsaved = true;
         } else {
             this.setTitle("HAL - Analisador");
             unsaved = false;
         }
-    };
+    }
+
+    ;
     
     
     @SuppressWarnings("unchecked")
@@ -455,20 +462,23 @@ public class Editor extends javax.swing.JFrame {
         splitDebug.setLeftComponent(pnAnalysis);
 
         pnErrors.setBackground(new java.awt.Color(0, 43, 54));
-        pnErrors.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1), "Erro", javax.swing.border.TitledBorder.DEFAULT_JUSTIFICATION, javax.swing.border.TitledBorder.DEFAULT_POSITION, new java.awt.Font("Segoe UI", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
+        pnErrors.setBorder(javax.swing.BorderFactory.createTitledBorder(javax.swing.BorderFactory.createEmptyBorder(2, 2, 2, 2), "Saída", javax.swing.border.TitledBorder.LEFT, javax.swing.border.TitledBorder.ABOVE_TOP, new java.awt.Font("SansSerif", 0, 14), new java.awt.Color(255, 255, 255))); // NOI18N
         pnErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnErrors.setMinimumSize(new java.awt.Dimension(35, 50));
         pnErrors.setPreferredSize(new java.awt.Dimension(100, 150));
         pnErrors.setRequestFocusEnabled(false);
-        pnErrors.setLayout(new javax.swing.BoxLayout(pnErrors, javax.swing.BoxLayout.PAGE_AXIS));
+        pnErrors.setLayout(new javax.swing.BoxLayout(pnErrors, javax.swing.BoxLayout.Y_AXIS));
 
         spErrors.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         spErrors.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        spErrors.setPreferredSize(new java.awt.Dimension(168, 100));
+        spErrors.setMinimumSize(new java.awt.Dimension(0, 15));
+        spErrors.setPreferredSize(new java.awt.Dimension(164, 100));
         spErrors.setRequestFocusEnabled(false);
 
         txaErrors.setColumns(20);
+        txaErrors.setLineWrap(true);
         txaErrors.setRows(5);
+        txaErrors.setWrapStyleWord(true);
         txaErrors.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         txaErrors.setEnabled(false);
         txaErrors.setFocusable(false);

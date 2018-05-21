@@ -1,6 +1,5 @@
 package net.unesc.hal.utils;
 
-import java.awt.Component;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
@@ -38,7 +37,7 @@ public class File {
             arq = new FileOutputStream(f);
 
             try {
-                ps = new PrintStream(arq);
+                ps = new PrintStream(arq, true, "UTF-8");
                 ps.println(str);
 
                 return path;

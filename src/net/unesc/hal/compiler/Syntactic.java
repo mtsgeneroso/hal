@@ -115,7 +115,7 @@ public class Syntactic {
     // Busca a derivação correspondente aos códigos
     public ArrayList getParsing(int c1, int c2) {
 
-        System.out.println(c1 + "|" + c2);
+        //System.out.println(c1 + "|" + c2);
         String der = parsing.get(c1 + "|" + c2);
         ArrayList derivation;
         if (der != null) {

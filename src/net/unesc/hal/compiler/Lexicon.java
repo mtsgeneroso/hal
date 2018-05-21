@@ -226,6 +226,8 @@ public class Lexicon {
                 }
                 if (is_comment_loop || is_literal_loop) {
                     literal_count++;
+                    if(cur_char != null)
+                        System.out.println(cur_char.getChar());
                     cur_char = chars.get(++car);
                     buffer.clear();
                 }

@@ -1,10 +1,8 @@
 package net.unesc.hal.languages;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Set;
 import net.unesc.hal.data.Token;
 
 public class HAL implements Language {

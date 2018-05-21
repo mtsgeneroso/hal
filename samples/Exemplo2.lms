@@ -11,13 +11,13 @@ PROGRAM TESTE123;
 		array_a : ARRAY[0..20] OF INTEGER;
 		array_b, array_c, array_d : ARRAY[0..1000] OF INTEGER;
 	
-	(*Declaração de procedure, inicia novo bloco*)
+	(*Declarao de procedure, inicia novo bloco*)
 	PROCEDURE p_teste(idd : INTEGER);
 		LABEL
 			label_a, label_b;
 			
 		CONST
-			(*A constante não aceita valores negativos*)
+			(*A constante no aceita valores negativos*)
 			a = 100;
 			b = 200;
 
@@ -30,15 +30,10 @@ PROGRAM TESTE123;
 
 	END;
 
-(*	
-	- Início do bloco principal
-	- Verificar, porque em alguns casos não é exigido o ; no final da expressão.
-*)
-
 BEGIN
 	x := 150;
 	begin
-		x := 20;
+		x := 20000;
 	end;
 	
 	(*Chama a procedure*)
@@ -78,3 +73,12 @@ BEGIN
 		30 : BEGIN END
 	END;
 END.
+
+
+
+
+
+
+
+
+
