@@ -1,4 +1,3 @@
-(*TESTE - Exemplo Válido*)
 PROGRAM TESTE123;
 	LABEL
 		label_a, label_b;
@@ -61,7 +60,7 @@ BEGIN
 	(*Testa as possibilidades do WRITELN*)
 	WRITELN(X,Z,Y);
 
-	(*Testa as possibilidades do FOR*)
+	(*Testa as possibilidades do FOR
 	FOR x := y > 2 TO 10 - 2 DO
 	BEGIN
 	END;
@@ -73,6 +72,8 @@ BEGIN
 		30 : BEGIN END
 	END;
 END.
+
+
 
 
 

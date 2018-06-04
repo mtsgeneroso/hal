@@ -34,9 +34,9 @@ public class Syntactic {
     private void run() {
         stack = new ArrayList<>();
         ArrayList<String> ids = new ArrayList<>();
-        int begin = 0;
-        int end = 0;
-        int varLevel = 0;
+        int begin = 0,
+            end = 0,
+            varLevel = 1;
         boolean hasVar = false;
         
         // Adiciona a regra inicial
@@ -59,27 +59,36 @@ public class Syntactic {
                 // Caso seja terminal e o topo do léxico e da pilha sejam iguais, ambos são removidos.
                 if (stk.equals(lex)) {
                     // System.out.println("Códigos iguais");
-                    
+                    /*
                     if (hasVar) {
                         if(stk.equals(4)){
                             varLevel++;
-                        System.out.println("LEVEL: " + varLevel);
+                            //System.out.println("LEVEL: " + varLevel);
                         }
                         
                         if(stk.equals(6)){
                             begin++;
-                        System.out.println("BEGIN: " + begin);
+                            //System.out.println("BEGIN: " + begin);
                         }
                         
                         if(stk.equals(7)){
                             end++;
-                        System.out.println("END: " + end);
+                            //System.out.println("END: " + end);
                         }
                         
                     } else if (stk.equals(4)) {
                         hasVar = true;
                         varLevel++;
-                        System.out.println("LEVEL: " + varLevel);
+                        //System.out.println("LEVEL: " + varLevel);
+                    }
+                    */
+                    if(lex.equals(5)) {
+                        varLevel++;
+                        System.out.println("Procedure");
+                    }
+                    
+                    if(lex.equals(25)){
+                        ids.add(lexicon.get(0)[2] + "| Nível: " + varLevel);
                     }
                     
                     lexicon.remove(0);

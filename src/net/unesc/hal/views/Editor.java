@@ -167,6 +167,7 @@ public class Editor extends javax.swing.JFrame {
         setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
 
         fieldEditor = new TextPanelHighLight();
+        fieldEditor.setCaretColor(Color.WHITE);
         spEditor = new javax.swing.JScrollPane(fieldEditor);
         txtLineNumber = new TextLineNumber(fieldEditor);
 
