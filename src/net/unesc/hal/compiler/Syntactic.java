@@ -15,29 +15,26 @@ public class Syntactic {
     private ArrayList<String[]> errors;
     private ArrayList<Integer> stack;
     private ArrayList<String> stacks;
+    private ArrayList<String[]> ids = new ArrayList<>();
     private HAL lang;
     private ArrayList<Token> non_terminals;
     private Map<String, String> parsing;
     private Semantic sem;
 
-    public Syntactic(ArrayList<String[]> lexicon, FiniteAutomaton fa) {
+    public Syntactic(ArrayList<String[]> lexicon, FiniteAutomaton fa, Semantic sem) {
         this.lexicon = lexicon;
         this.lang = fa.getLang();
         this.non_terminals = this.lang.getNonTerminals();
         this.parsing = this.lang.getParsing();
         this.errors = new ArrayList<>();
         this.stacks = new ArrayList<>();
-        this.sem = new Semantic(lexicon);
+        this.ids = new ArrayList<>();
+        this.sem = sem;
         run();
     }
 
     private void run() {
         stack = new ArrayList<>();
-        ArrayList<String> ids = new ArrayList<>();
-        int begin = 0,
-            end = 0,
-            varLevel = 1;
-        boolean hasVar = false;
         
         // Adiciona a regra inicial
         addDerivation(getParsing(52, 1));
@@ -59,37 +56,9 @@ public class Syntactic {
                 // Caso seja terminal e o topo do léxico e da pilha sejam iguais, ambos são removidos.
                 if (stk.equals(lex)) {
                     // System.out.println("Códigos iguais");
-                    /*
-                    if (hasVar) {
-                        if(stk.equals(4)){
-                            varLevel++;
-                            //System.out.println("LEVEL: " + varLevel);
-                        }
-                        
-                        if(stk.equals(6)){
-                            begin++;
-                            //System.out.println("BEGIN: " + begin);
-                        }
-                        
-                        if(stk.equals(7)){
-                            end++;
-                            //System.out.println("END: " + end);
-                        }
-                        
-                    } else if (stk.equals(4)) {
-                        hasVar = true;
-                        varLevel++;
-                        //System.out.println("LEVEL: " + varLevel);
-                    }
-                    */
-                    if(lex.equals(5)) {
-                        varLevel++;
-                        System.out.println("Procedure");
-                    }
                     
-                    if(lex.equals(25)){
-                        ids.add(lexicon.get(0)[2] + "| Nível: " + varLevel);
-                    }
+                    // Checagem do item no analisador semântico
+                    sem.check(lexicon.get(0));
                     
                     lexicon.remove(0);
                     stack.remove(0);

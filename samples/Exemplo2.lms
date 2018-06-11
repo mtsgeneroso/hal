@@ -10,7 +10,6 @@ PROGRAM TESTE123;
 		array_a : ARRAY[0..20] OF INTEGER;
 		array_b, array_c, array_d : ARRAY[0..1000] OF INTEGER;
 	
-	(*Declarao de procedure, inicia novo bloco*)
 	PROCEDURE p_teste(idd : INTEGER);
 		LABEL
 			label_a, label_b;
@@ -28,10 +27,10 @@ PROGRAM TESTE123;
 		X := a * b;
 
 	END;
-
 BEGIN
-	x := 150;
-	begin
+		x := 20000;
+		y := 20000;
+	BEGIN
 		x := 20000;
 	end;
 	
@@ -48,7 +47,7 @@ BEGIN
 
 	(*Testa as possibilidades do WHILE*)
 	WHILE(x <> 0)DO
-	BEGIN 
+	BEGIN;
 	END; 
 
 	(*Testa as possibilidades do REPEAT*)
@@ -72,12 +71,6 @@ BEGIN
 		30 : BEGIN END
 	END;
 END.
-
-
-
-
-
-
 
 
 

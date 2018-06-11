@@ -10,6 +10,7 @@ import javax.swing.JOptionPane;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.exceptions.EditorException;
 import net.unesc.hal.compiler.Lexicon;
+import net.unesc.hal.compiler.Semantic;
 import net.unesc.hal.compiler.Syntactic;
 import net.unesc.hal.utils.File;
 import net.unesc.hal.views.Editor;
@@ -69,9 +70,14 @@ public class EditorListener implements ActionListener {
                 ed.setTokens(tokens);
                 ed.setErrors(lex.getErrors());
                 if(lex.getErrors().isEmpty()) {
-                    Syntactic syn = new Syntactic(tokens, ed.getFiniteAutomaton());
+                    Semantic sem = new Semantic();
+                    Syntactic syn = new Syntactic(tokens, ed.getFiniteAutomaton(), sem);
                     ed.setStacks(syn.getStacks());
                     ed.setErrors(syn.getErrors());
+                    if(syn.getErrors().isEmpty()) {
+                        ed.setIdentifiers(sem.getIds());
+                        ed.setErrors(sem.getErrors());
+                    }
                 }
                 break;
             default:

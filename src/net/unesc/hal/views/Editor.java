@@ -84,6 +84,11 @@ public class Editor extends javax.swing.JFrame {
         tbLexicon.setModel(tbModel);
     }
 
+    public void clearTokens() {
+        ArrayList<String[]> tokens = new ArrayList<>();
+        setTokens(tokens);
+    }
+
     public void setStacks(ArrayList<String> stacks) {
         // TODO: Poupulate Tokens table
 
@@ -103,9 +108,25 @@ public class Editor extends javax.swing.JFrame {
         setStacks(stacks);
     }
 
-    public void clearTokens() {
-        ArrayList<String[]> tokens = new ArrayList<>();
-        setTokens(tokens);
+    public void setIdentifiers(ArrayList<String[]> identifiers) {
+
+        DefaultTableModel tbModel = new DefaultTableModel();
+
+        tbModel.addColumn("Nome");
+        tbModel.addColumn("Categoria");
+        tbModel.addColumn("Tipo");
+        tbModel.addColumn("Nível");
+
+        for (int i = 0; i < identifiers.size(); i++) {
+            tbModel.addRow(identifiers.get(i));
+        }
+
+        tbSemantic.setModel(tbModel);
+    }
+
+    public void clearIdentifiers() {
+        ArrayList<String[]> identifiers = new ArrayList<>();
+        setIdentifiers(identifiers);
     }
 
     public void clearErrors() {
@@ -221,9 +242,7 @@ public class Editor extends javax.swing.JFrame {
             this.setTitle("HAL - Analisador");
             unsaved = false;
         }
-    }
-
-    ;
+    };
     
     
     @SuppressWarnings("unchecked")
@@ -250,6 +269,8 @@ public class Editor extends javax.swing.JFrame {
         tbLexicon = new javax.swing.JTable();
         spSyntaticDebug = new javax.swing.JScrollPane();
         tbSyntatic = new javax.swing.JTable();
+        spSemanticDebug = new javax.swing.JScrollPane();
+        tbSemantic = new javax.swing.JTable();
         pnErrors = new javax.swing.JPanel();
         spErrors = new javax.swing.JScrollPane();
         txaErrors = new javax.swing.JTextArea();
@@ -457,6 +478,42 @@ public class Editor extends javax.swing.JFrame {
 
         tabsResults.addTab("Sintático", spSyntaticDebug);
 
+        tbSemantic.setModel(new javax.swing.table.DefaultTableModel(
+            new Object [][] {
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null},
+                {null, null, null, null}
+            },
+            new String [] {
+                "Nome", "Categoria", "Tipo", "Nível"
+            }
+        ) {
+            Class[] types = new Class [] {
+                java.lang.String.class, java.lang.String.class, java.lang.String.class, java.lang.String.class
+            };
+            boolean[] canEdit = new boolean [] {
+                false, false, false, false
+            };
+
+            public Class getColumnClass(int columnIndex) {
+                return types [columnIndex];
+            }
+
+            public boolean isCellEditable(int rowIndex, int columnIndex) {
+                return canEdit [columnIndex];
+            }
+        });
+        spSemanticDebug.setViewportView(tbSemantic);
+        if (tbSemantic.getColumnModel().getColumnCount() > 0) {
+            tbSemantic.getColumnModel().getColumn(0).setResizable(false);
+            tbSemantic.getColumnModel().getColumn(1).setResizable(false);
+            tbSemantic.getColumnModel().getColumn(2).setResizable(false);
+            tbSemantic.getColumnModel().getColumn(3).setResizable(false);
+        }
+
+        tabsResults.addTab("Semântico", spSemanticDebug);
+
         pnAnalysis.add(tabsResults);
         tabsResults.getAccessibleContext().setAccessibleName("Results");
 
@@ -519,11 +576,13 @@ public class Editor extends javax.swing.JFrame {
     private javax.swing.JPanel pnMain;
     private javax.swing.JScrollPane spErrors;
     private javax.swing.JScrollPane spLexiconDebug;
+    private javax.swing.JScrollPane spSemanticDebug;
     private javax.swing.JScrollPane spSyntaticDebug;
     private javax.swing.JSplitPane splitDebug;
     private javax.swing.JSplitPane splitMain;
     private javax.swing.JTabbedPane tabsResults;
     private javax.swing.JTable tbLexicon;
+    private javax.swing.JTable tbSemantic;
     private javax.swing.JTable tbSyntatic;
     private javax.swing.JPanel toolbar;
     private javax.swing.JPanel toolbarLeft;
