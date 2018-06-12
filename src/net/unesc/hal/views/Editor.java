@@ -141,7 +141,11 @@ public class Editor extends javax.swing.JFrame {
         }
 
         for (int i = 0; i < tokens.size(); i++) {
-            txaErrors.setText("Linha: " + tokens.get(i)[0] + " -> " + tokens.get(i)[1]);
+            if(tokens.get(i).length > 2)
+                txaErrors.setText("Linha: " + tokens.get(i)[0] + " -> " + tokens.get(i)[1]);
+            else
+                txaErrors.setText("Semântico: " + tokens.get(i)[0]);
+
         }
 
         spErrors.setVisible(true);

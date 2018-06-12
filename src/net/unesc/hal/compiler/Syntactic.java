@@ -86,7 +86,6 @@ public class Syntactic {
             }
 
         } while (!stack.isEmpty());
-
         // System.out.println("Sintático concluído");
     }
 
