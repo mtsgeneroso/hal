@@ -1,4 +1,4 @@
-package net.unesc.hal.compiler;
+package net.unesc.hal.steps;
 
 import java.util.ArrayList;
 import net.unesc.hal.controllers.FiniteAutomaton;
