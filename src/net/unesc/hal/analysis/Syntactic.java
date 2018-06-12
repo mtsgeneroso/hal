@@ -1,4 +1,4 @@
-package net.unesc.hal.steps;
+package net.unesc.hal.analysis;
 
 import java.awt.List;
 import java.util.ArrayList;

@@ -1,4 +1,4 @@
-package net.unesc.hal.steps;
+package net.unesc.hal.analysis;
 
 import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;

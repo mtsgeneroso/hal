@@ -9,9 +9,9 @@ import java.util.logging.Logger;
 import javax.swing.JOptionPane;
 import net.unesc.hal.data.Source;
 import net.unesc.hal.exceptions.EditorException;
-import net.unesc.hal.steps.Lexicon;
-import net.unesc.hal.steps.Semantic;
-import net.unesc.hal.steps.Syntactic;
+import net.unesc.hal.analysis.Lexicon;
+import net.unesc.hal.analysis.Semantic;
+import net.unesc.hal.analysis.Syntactic;
 import net.unesc.hal.utils.File;
 import net.unesc.hal.views.Editor;
 
