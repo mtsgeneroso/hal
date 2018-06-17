@@ -3,6 +3,18 @@ PROGRAM TESTE_PROC;
 	PROCEDURE p_a(idd : INTEGER);
 		VAR 
 		    X, Y, Z : INTEGER;
+	PROCEDURE p_a(idd : INTEGER);
+		VAR 
+		    X, Y, Z : INTEGER;
+	PROCEDURE p_a(idd : INTEGER);
+		VAR 
+		    X, Y, Z : INTEGER;
+	BEGIN
+		X := X * Y;
+	END;
+	BEGIN
+		X := X * Y;
+	END;
 	BEGIN
 		X := X * Y;
 	END;
@@ -11,6 +23,12 @@ PROGRAM TESTE_PROC;
 	PROCEDURE p_b(idd : INTEGER);
 		VAR 
 		    X, Y, Z : INTEGER;
+	PROCEDURE p_a(idd : INTEGER);
+		VAR 
+		    X, Y, Z : INTEGER;
+	BEGIN
+		X := X * Y;
+	END;
 	BEGIN
 		X := Z *Z;
 	END;
@@ -20,3 +38,6 @@ BEGIN
 	call p_a(10 + 2);
 	call p_b(5);
 END.
+
+
+

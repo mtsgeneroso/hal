@@ -4,8 +4,10 @@
     <open-files xmlns="http://www.netbeans.org/ns/projectui-open-files/2">
         <group name="analisador-lexico"/>
         <group>
+            <file>file:/D:/Projetos/hal/src/net/unesc/hal/analysis/Semantic.java</file>
+            <file>file:/D:/Projetos/hal/src/net/unesc/hal/analysis/semantic/Node.java</file>
             <file>file:/D:/Projetos/hal/src/net/unesc/hal/views/Editor.java</file>
-            <file>file:/D:/Projetos/hal/src/net/unesc/hal/compiler/Semantic.java</file>
+            <file>file:/D:/Projetos/hal/src/net/unesc/hal/analysis/semantic/Identifier.java</file>
             <file>file:/D:/Projetos/hal/src/net/unesc/hal/languages/HAL.java</file>
         </group>
     </open-files>

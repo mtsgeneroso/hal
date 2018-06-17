@@ -7,11 +7,11 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JOptionPane;
-import net.unesc.hal.data.Source;
+import net.unesc.hal.analysis.lexicon.Source;
 import net.unesc.hal.exceptions.EditorException;
-import net.unesc.hal.compiler.Lexicon;
-import net.unesc.hal.compiler.Semantic;
-import net.unesc.hal.compiler.Syntactic;
+import net.unesc.hal.analysis.Lexicon;
+import net.unesc.hal.analysis.Semantic;
+import net.unesc.hal.analysis.Syntactic;
 import net.unesc.hal.utils.File;
 import net.unesc.hal.views.Editor;
 

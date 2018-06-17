@@ -1,4 +1,4 @@
-package net.unesc.hal.data;
+package net.unesc.hal.analysis.lexicon;
 
 public class Char {
 

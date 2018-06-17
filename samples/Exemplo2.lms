@@ -3,10 +3,10 @@ PROGRAM TESTE123;
 		label_a, label_b;
 	
 	CONST  
-		a = -100;
+		A = -100;
 		b = -200;
 	VAR 
-		 X, Y, Z : INTEGER;
+		 X, Y, Z: INTEGER;
 		array_a : ARRAY[0..20] OF INTEGER;
 		array_b, array_c, array_d : ARRAY[0..1000] OF INTEGER;
 	
@@ -24,14 +24,12 @@ PROGRAM TESTE123;
 			array_a : ARRAY[0..20] OF INTEGER;
 			array_b : ARRAY[0..1000] OF INTEGER;
 	BEGIN
-		X := a * b;
+		X := a * b + W;
 
 	END;
 BEGIN
-		x := 20000;
-		y := 20000;
 	BEGIN
-		x := 20000;
+		X := 20000;
 	end;
 	
 	(*Chama a procedure*)
@@ -46,7 +44,7 @@ BEGIN
 		END;
 
 	(*Testa as possibilidades do WHILE*)
-	WHILE(x <> 0)DO
+	WHILE(X <> 0)DO
 	BEGIN;
 	END; 
 
@@ -71,6 +69,8 @@ BEGIN
 		30 : BEGIN END
 	END;
 END.
+
+
 
 
 

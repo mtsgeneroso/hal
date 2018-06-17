@@ -1,4 +1,4 @@
-package net.unesc.hal.compiler;
+package net.unesc.hal.analysis;
 
 import java.awt.List;
 import java.util.ArrayList;
@@ -6,7 +6,7 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Map;
 import net.unesc.hal.controllers.FiniteAutomaton;
-import net.unesc.hal.data.Token;
+import net.unesc.hal.analysis.lexicon.Token;
 import net.unesc.hal.languages.HAL;
 
 public class Syntactic {
