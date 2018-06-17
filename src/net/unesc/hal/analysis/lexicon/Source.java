@@ -1,4 +1,4 @@
-package net.unesc.hal.data;
+package net.unesc.hal.analysis.lexicon;
 
 import java.util.ArrayList;
 

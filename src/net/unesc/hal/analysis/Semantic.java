@@ -1,34 +1,36 @@
 package net.unesc.hal.analysis;
 
-import java.security.NoSuchAlgorithmException;
 import java.util.ArrayList;
 import java.util.UUID;
+import net.unesc.hal.analysis.semantic.Identifier;
+import net.unesc.hal.analysis.semantic.Node;
+import net.unesc.hal.analysis.semantic.Procedure;
 
 public class Semantic {
 
+    public static final int CATEGORY_VARIABLE = 1;
+    public static final int CATEGORY_CONSTANT = 2;
+    public static final int CATEGORY_LABEL = 3;
+    public static final int CATEGORY_PARAMETER = 4;
+    public static final int CATEGORY_PROCEDURE = 5;
+
+    public static final int TYPE_INTEGER = 1;
+    public static final int TYPE_LITERAL = 2;
+
     private ArrayList<String[]> errors;
-    private ArrayList<String[]> ids;
-    private Integer scope;
-    private String currHash;
-    private boolean hasVar;
-    private boolean isRunning;
-    private int skipLevel;
-    private Integer lastToken;
-    private String lastCategory;
-    private String category;
-    private String type;
+
+    private int currType;
+    private int currCategory;
+
+    private Node tree;
+    private Node currNode;
 
     public Semantic() {
         this.errors = new ArrayList<>();
-        this.ids = new ArrayList<>();
-        this.scope = 1;
-        this.hasVar = false;
-        this.isRunning = false;
-        this.skipLevel = 1;
-        this.category = "";
-        this.type = "";
-        this.lastCategory = "";
-        this.currHash = "";
+        this.tree = new Node();
+        this.currNode = tree;
+        this.currType = 0;
+        this.currCategory = -1;
     }
 
     public ArrayList<String[]> getErrors() {
@@ -41,169 +43,249 @@ public class Semantic {
         errors.add(adition);
     }
 
-    public ArrayList<String[]> getIds() {
-        return ids;
-    }
-
-    private String[] getId(int index) {
-        return ids.get(index);
-    }
-
-    public void setIds(ArrayList<String[]> ids) {
-        this.ids = ids;
-    }
-
-    private void addId(String name, String category, String type, Integer level) {
-        String[] id = new String[5];
-        id[0] = name;
-        id[1] = category;
-        id[2] = type;
-        id[3] = level.toString();
-        id[4] = ""; // Hash do scope
-        ids.add(id);
-    }
-
-    public void setRegressiveTypeId(String type) {
-        for (int i = ids.size() - 1; i > 0; i--) {
-            if (ids.get(i)[2].isEmpty() && ids.get(i)[1].equals("Variável")) {
-                String[] id = ids.get(i);
-                id[2] = type;
-                ids.set(i, id);
-            } else {
-                return;
-            }
-        }
-    }
-
     public void check(String[] item) {
-
+        String line = item[0];
         Integer cod = new Integer(item[1]);
         String token = item[2];
         String source = item[3];
 
-        if (cod.equals(2) || cod.equals(3) || cod.equals(4) || cod.equals(5)) {
-            isRunning = true;
-        }
-
-        if (!isRunning) {
-            return;
-        }
-
-        // BEGIN
-        if (cod.equals(6)) {
-            if (skipLevel > 0) {
-                skipLevel--;
-            } else {
-                scope++;
-            }
-        }
-
-        if (cod.equals(2)) {
-            category = "Rótulo";
-            type = "String";
-        }
-
-        if (cod.equals(3)) {
-            category = "Constante";
-            type = "Inteiro";
-        }
-
-        if (cod.equals(4)) {
-            category = "Variável";
-            type = "";
-        }
-
-        // Integer
-        if (cod.equals(8)) {
-            setRegressiveTypeId("Inteiro");
-        }
-
-        if (cod.equals(5)) {
-            category = "Procedure";
-            type = "Procedure";
-        }
-
-        if (cod.equals(11)) {
-            category = "Procedure";
-            type = "Call";
-        }
-
-        if (lastCategory.equals("Procedure")) {
-            category = "Procedure";
-        }
-
-        if (!ids.isEmpty() && getId(ids.size() - 1)[1].equals("Procedure") && !getId(ids.size() - 1)[2].equals("Call")) {
-            category = "Parâmetro";
-        }
-
-        if (cod.equals(25)) {
-            if (lastToken.equals(5)) {
-                addId(source, category, type, scope);
-                skipLevel++;
-                scope++;
-
-            } else {
-                addId(source, category, type, scope);
-            }
-        }
-
-        lastToken = cod;
-        lastCategory = category;
-
-        // END
-        if (cod.equals(7)) {
-            scope--;
-            beforeEnd();
-        }
-    }
-
-    public void beforeEnd() {
-        for (int i = 0; i < ids.size(); i++) {
-            if (ids.get(i)[2].isEmpty() && ids.get(i)[1].equals("Variável")) {
-                if (isInstanced(ids.get(i))) {
-                    String[] id = ids.get(i);
-                    id[2] = "Inteiro";
-                    ids.set(i, id);
-                } else {
-                    addError("A variável " + ids.get(i)[0] + " não foi instanciada");
+        //1, "program"
+        //2, "label"
+        //3, "const"
+        //4, "var"
+        //5, "procedure"
+        //6, "begin"
+        //7, "end"
+        //8, "integer"
+        //9, "array"
+        //10, "of"
+        //11, "call"
+        //12, "goto"
+        //13, "if"
+        //14, "then"
+        //15, "else"
+        //16, "while"
+        //17, "do"
+        //18, "repeat"
+        //19, "until"
+        //20, "readln"
+        //21, "writeln"
+        //22, "or"
+        //23, "and"
+        //24, "not"
+        //27, "for"
+        //28, "to"
+        //29, "case"
+        switch (cod) {
+            case 2:
+                currCategory = CATEGORY_LABEL;
+                break;
+            case 3:
+                currCategory = CATEGORY_CONSTANT;
+                break;
+            case 4:
+                currCategory = CATEGORY_VARIABLE;
+                break;
+            case 5:
+                currCategory = CATEGORY_PROCEDURE;
+                break;
+            case 6:
+                currCategory = 0;
+                break;
+            case 7:
+                if (currNode.getParent() != null) {
+                    currNode = currNode.getParent();
                 }
-            }
+                break;
+            case 25:
+                switch (currCategory) {
+                    case -1:
+                        // Nome do programa
+                        return;
+                    case CATEGORY_PROCEDURE:
+                        if (addProcedure(source) == -1) {
+                            addError("Linha ->" + line + ": A procedure " + source + " já foi declarada");
+                            return;
+                        }
+                        currCategory = CATEGORY_PARAMETER;
+                        break;
+                    case CATEGORY_PARAMETER:
+                        if (addIdentifier(source, CATEGORY_PARAMETER, TYPE_INTEGER) == -1) {
+                            addError("Linha ->" + line + ": O parametro " + source + " já foi declarado");
+                            return;
+                        }
+                        break;
+                    case CATEGORY_CONSTANT:
+                        if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
+                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                            return;
+                        }
+                        break;
+                    case CATEGORY_LABEL:
+                        if (addIdentifier(source, currCategory, TYPE_LITERAL) == -1) {
+                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                            return;
+                        }
+                        break;
+                    case CATEGORY_VARIABLE:
+                        if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
+                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                            return;
+                        }
+                        break;
+                    default:
+                        if (!anyMatchDeclaration(source, currNode)) {
+                            addError("Linha ->" + line + ": O identificador " + source + " não foi declarado");
+                        }
+                        break;
+                }
+                break;
         }
-        setRegressiveHashingLevels();
+
     }
 
-    private boolean isInstanced(String[] id) {
-        for (int i = 0; i < ids.size(); i++) {
-            if (!ids.get(i)[2].isEmpty()
-                    && ids.get(i)[1].equals("Variável")
-                    && ids.get(i)[3].equals(id[3])
-                    && ids.get(i)[0].equals(id[0])) {
+    private int addIdentifier(String name, int category, int type) {
+        if (anyMatchIdentifier(name)) {
+            return -1;
+        }
+
+        currNode.addIdentifier(new Identifier(name, category, type));
+        return 0;
+    }
+
+    private int addProcedure(String name) {
+
+        if (anyMatchProcedure(name)) {
+            return -1;
+        }
+
+        addNode(new Procedure(name));
+        return 0;
+    }
+
+    private boolean anyMatchDeclaration(String name, Node n) {
+        
+        for (Node p : n.getChildren()) {
+            if (p.isProcedure() && p.getName().equals(name)) {
+                return true;
+            }
+        }
+        
+        for (Identifier i : n.getIdentifiers()) {
+            if (i.getName().equals(name)) {
+                return true;
+            }
+        }
+
+        if (n.getParent() != null) {
+            return anyMatchDeclaration(name, n.getParent());
+        }
+
+        return false;
+    }
+
+    private boolean anyMatchIdentifier(String name) {
+        if (currNode.getIdentifiers().isEmpty()) {
+            return false;
+        }
+
+        for (Identifier i : currNode.getIdentifiers()) {
+            if (i.getName().equals(name)) {
                 return true;
             }
         }
         return false;
     }
 
-    private void setRegressiveHashingLevels() {
-        Integer currScope = 1;
-        String hash = generateHash();
-        for (int i = 0; i < ids.size(); i++) {
-            int scope = new Integer(ids.get(i)[3]);
-            if (ids.get(i)[4].isEmpty() && scope > 1) {
-                if (currScope.equals(new Integer(ids.get(i)[3]))) {
-                    String[] id = ids.get(i);
-                    id[4] = scope > 1 ? hash : "";
-                    System.out.println(id[4]);
-                    ids.set(i, id);
-                } else  {
-                    currScope = scope;
-                    hash = generateHash();
-                }
+    private boolean anyMatchProcedure(String name) {
+
+        if (currNode.getChildren().isEmpty()) {
+            return false;
+        }
+
+        for (Node n : currNode.getChildren()) {
+            if (n.isProcedure() && n.getName().equals(name)) {
+                return true;
             }
         }
+        return false;
     }
 
-    private String generateHash() {
-        return UUID.randomUUID().toString();
+    private void addNode(Node n) {
+        Node node = n;
+        currNode.addChild(node);
+        node.setParent(currNode);
+        currNode = node;
+    }
+
+    public ArrayList<String[]> getIds() {
+
+        ArrayList<String[]> ids = new ArrayList<>();
+
+        for (Identifier i : currNode.getIdentifiers()) {
+            String[] id = new String[4];
+            id[0] = i.getName();
+            id[1] = parseCategory(i.getCategory());
+            id[2] = parseType(i.getType());
+            id[3] = "1";
+            ids.add(id);
+        }
+        if (!currNode.getChildren().isEmpty()) {
+            ids = makeSymbolTable(ids, 1, currNode);
+        }
+        return ids;
+    }
+
+    private ArrayList<String[]> makeSymbolTable(ArrayList<String[]> ids, int level, Node currNode) {
+        level++;
+        for (Node n : currNode.getChildren()) {
+            if (n.isProcedure()) {
+                String[] id = new String[4];
+                id[0] = n.getName();
+                id[1] = parseCategory(CATEGORY_PROCEDURE);
+                id[2] = "";
+                id[3] = new Integer(level - 1).toString();
+                ids.add(id);
+            }
+            for (Identifier i : n.getIdentifiers()) {
+                String[] id = new String[4];
+                id[0] = i.getName();
+                id[1] = parseCategory(i.getCategory());
+                id[2] = parseType(i.getType());
+                id[3] = new Integer(level).toString();
+                ids.add(id);
+            }
+            if (!n.getChildren().isEmpty()) {
+                ids = makeSymbolTable(ids, level, n);
+            }
+        }
+
+        return ids;
+    }
+
+    private String parseCategory(int category) {
+        switch (category) {
+            case CATEGORY_CONSTANT:
+                return "Constante";
+            case CATEGORY_LABEL:
+                return "Label";
+            case CATEGORY_PARAMETER:
+                return "Parâmetro";
+            case CATEGORY_PROCEDURE:
+                return "Procedure";
+            case CATEGORY_VARIABLE:
+                return "Variável";
+        }
+        return "";
+    }
+
+    private String parseType(int type) {
+        switch (type) {
+            case TYPE_INTEGER:
+                return "Inteiro";
+            case TYPE_LITERAL:
+                return "Literal";
+        }
+        return "";
     }
 }

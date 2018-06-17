@@ -2,9 +2,9 @@ package net.unesc.hal.analysis;
 
 import java.util.ArrayList;
 import net.unesc.hal.controllers.FiniteAutomaton;
-import net.unesc.hal.data.Char;
-import net.unesc.hal.data.Source;
-import net.unesc.hal.data.Token;
+import net.unesc.hal.analysis.lexicon.Char;
+import net.unesc.hal.analysis.lexicon.Source;
+import net.unesc.hal.analysis.lexicon.Token;
 import net.unesc.hal.languages.HAL;
 
 public class Lexicon {

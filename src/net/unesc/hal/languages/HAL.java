@@ -3,7 +3,7 @@ package net.unesc.hal.languages;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
-import net.unesc.hal.data.Token;
+import net.unesc.hal.analysis.lexicon.Token;
 
 public class HAL implements Language {
 

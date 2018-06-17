@@ -10,7 +10,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import net.unesc.hal.controllers.FiniteAutomaton;
-import net.unesc.hal.data.Source;
+import net.unesc.hal.analysis.lexicon.Source;
 import net.unesc.hal.languages.HAL;
 import net.unesc.hal.listeners.ButtonListener;
 import net.unesc.hal.listeners.EditorListener;
@@ -281,8 +281,9 @@ public class Editor extends javax.swing.JFrame {
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE);
         setTitle("H.A.L. - Analisador");
-        setPreferredSize(new java.awt.Dimension(800, 600));
-        setSize(new java.awt.Dimension(800, 600));
+        setMinimumSize(new java.awt.Dimension(800, 600));
+        setPreferredSize(new java.awt.Dimension(1024, 600));
+        setSize(new java.awt.Dimension(1024, 600));
         getContentPane().setLayout(new javax.swing.BoxLayout(getContentPane(), javax.swing.BoxLayout.Y_AXIS));
 
         toolbar.setBackground(new java.awt.Color(0, 43, 54));
@@ -300,7 +301,7 @@ public class Editor extends javax.swing.JFrame {
         btnNew.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/new.png"))); // NOI18N
         btnNew.setText("NOVO");
         btnNew.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnNew.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnNew.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnNew.setFocusable(false);
         btnNew.setMaximumSize(new java.awt.Dimension(59, 25));
         btnNew.setMinimumSize(new java.awt.Dimension(59, 25));
@@ -313,7 +314,7 @@ public class Editor extends javax.swing.JFrame {
         btnOpen.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/open.png"))); // NOI18N
         btnOpen.setText("ABRIR");
         btnOpen.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnOpen.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnOpen.setFocusable(false);
         btnOpen.setMaximumSize(new java.awt.Dimension(75, 25));
         btnOpen.setMinimumSize(new java.awt.Dimension(75, 25));
@@ -326,7 +327,7 @@ public class Editor extends javax.swing.JFrame {
         btnSave.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/save.png"))); // NOI18N
         btnSave.setText("SALVAR");
         btnSave.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnSave.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnSave.setFocusable(false);
         btnSave.setMaximumSize(new java.awt.Dimension(80, 25));
         btnSave.setMinimumSize(new java.awt.Dimension(80, 25));
@@ -340,7 +341,7 @@ public class Editor extends javax.swing.JFrame {
         btnRun.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/run.png"))); // NOI18N
         btnRun.setText("EXECUTAR");
         btnRun.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
-        btnRun.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnRun.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnRun.setFocusable(false);
         btnRun.setMaximumSize(new java.awt.Dimension(100, 25));
         btnRun.setMinimumSize(new java.awt.Dimension(100, 25));
@@ -358,7 +359,7 @@ public class Editor extends javax.swing.JFrame {
         btnAbout.setIcon(new javax.swing.ImageIcon(getClass().getResource("/net/unesc/hal/resources/info.png"))); // NOI18N
         btnAbout.setText("SOBRE");
         btnAbout.setBorder(null);
-        btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        btnAbout.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         btnAbout.setFocusable(false);
         btnAbout.setMaximumSize(new java.awt.Dimension(75, 25));
         btnAbout.setMinimumSize(new java.awt.Dimension(75, 25));
@@ -399,7 +400,7 @@ public class Editor extends javax.swing.JFrame {
         pnAnalysis.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
         pnAnalysis.setLayout(new javax.swing.BoxLayout(pnAnalysis, javax.swing.BoxLayout.LINE_AXIS));
 
-        tabsResults.setCursor(new java.awt.Cursor(java.awt.Cursor.HAND_CURSOR));
+        tabsResults.setCursor(new java.awt.Cursor(java.awt.Cursor.DEFAULT_CURSOR));
 
         spLexiconDebug.setBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
         spLexiconDebug.setViewportBorder(javax.swing.BorderFactory.createEmptyBorder(1, 1, 1, 1));
