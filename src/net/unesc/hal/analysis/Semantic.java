@@ -44,6 +44,11 @@ public class Semantic {
     }
 
     public void check(String[] item) {
+        
+        if(!errors.isEmpty()){
+            return;
+        }
+        
         String line = item[0];
         Integer cod = new Integer(item[1]);
         String token = item[2];
@@ -98,50 +103,49 @@ public class Semantic {
                 }
                 break;
             case 25:
-                switch (currCategory) {
-                    case -1:
-                        // Nome do programa
-                        return;
-                    case CATEGORY_PROCEDURE:
-                        if (addProcedure(source) == -1) {
-                            addError("Linha ->" + line + ": A procedure " + source + " já foi declarada");
-                            return;
-                        }
-                        currCategory = CATEGORY_PARAMETER;
-                        break;
-                    case CATEGORY_PARAMETER:
-                        if (addIdentifier(source, CATEGORY_PARAMETER, TYPE_INTEGER) == -1) {
-                            addError("Linha ->" + line + ": O parametro " + source + " já foi declarado");
-                            return;
-                        }
-                        break;
-                    case CATEGORY_CONSTANT:
-                        if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
-                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
-                            return;
-                        }
-                        break;
-                    case CATEGORY_LABEL:
-                        if (addIdentifier(source, currCategory, TYPE_LITERAL) == -1) {
-                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
-                            return;
-                        }
-                        break;
-                    case CATEGORY_VARIABLE:
-                        if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
-                            addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
-                            return;
-                        }
-                        break;
-                    default:
-                        if (!anyMatchDeclaration(source, currNode)) {
-                            addError("Linha ->" + line + ": O identificador " + source + " não foi declarado");
-                        }
-                        break;
-                }
+                handleIdentifier(line, source);
                 break;
         }
 
+    }
+
+    private void handleIdentifier(String line, String source) {
+        switch (currCategory) {
+            case -1:
+                // Nome do programa
+                return;
+            case CATEGORY_PROCEDURE:
+                if (addProcedure(source) == -1) {
+                    addError("Linha ->" + line + ": A procedure " + source + " já foi declarada");
+                    return;
+                }
+                currCategory = CATEGORY_PARAMETER;
+                break;
+            case CATEGORY_PARAMETER:
+                if (addIdentifier(source, CATEGORY_PARAMETER, TYPE_INTEGER) == -1) {
+                    addError("Linha ->" + line + ": O parametro " + source + " já foi declarado");
+                }
+                break;
+            case CATEGORY_CONSTANT:
+                if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
+                    addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                }
+                break;
+            case CATEGORY_LABEL:
+                if (addIdentifier(source, currCategory, TYPE_LITERAL) == -1) {
+                    addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                }
+                break;
+            case CATEGORY_VARIABLE:
+                if (addIdentifier(source, currCategory, TYPE_INTEGER) == -1) {
+                    addError("Linha ->" + line + ": O identificador " + source + " já foi declarado");
+                }
+                break;
+            default:
+                if (!anyMatchDeclaration(source, currNode)) {
+                    addError("Linha ->" + line + ": O identificador " + source + " não foi declarado");
+                }
+        }
     }
 
     private int addIdentifier(String name, int category, int type) {
@@ -164,15 +168,15 @@ public class Semantic {
     }
 
     private boolean anyMatchDeclaration(String name, Node n) {
-        
+
         for (Node p : n.getChildren()) {
-            if (p.isProcedure() && p.getName().equals(name)) {
+            if (p.isProcedure() && p.getName().toUpperCase().equals(name.toUpperCase())) {
                 return true;
             }
         }
-        
+
         for (Identifier i : n.getIdentifiers()) {
-            if (i.getName().equals(name)) {
+            if (i.getName().toUpperCase().equals(name.toUpperCase())) {
                 return true;
             }
         }
@@ -190,7 +194,7 @@ public class Semantic {
         }
 
         for (Identifier i : currNode.getIdentifiers()) {
-            if (i.getName().equals(name)) {
+            if (i.getName().toUpperCase().equals(name.toUpperCase())) {
                 return true;
             }
         }
@@ -204,7 +208,7 @@ public class Semantic {
         }
 
         for (Node n : currNode.getChildren()) {
-            if (n.isProcedure() && n.getName().equals(name)) {
+            if (n.isProcedure() && n.getName().toUpperCase().equals(name.toUpperCase())) {
                 return true;
             }
         }

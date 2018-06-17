@@ -63,8 +63,7 @@ public class EditorListener implements ActionListener {
                 ed.setSource("");
                 break;
             case Editor.RUN:
-                ed.clearTokens();
-                ed.clearErrors();
+                ed.clear();
                 Lexicon lex = new Lexicon(src, ed.getFiniteAutomaton());
                 ArrayList<String[]> tokens = lex.getTokens();
                 ed.setTokens(tokens);

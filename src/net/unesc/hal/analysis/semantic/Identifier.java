@@ -1,5 +1,7 @@
 package net.unesc.hal.analysis.semantic;
 
+import java.util.Objects;
+
 public class Identifier {
     private String name;
     private int category;

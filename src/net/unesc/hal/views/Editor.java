@@ -134,6 +134,13 @@ public class Editor extends javax.swing.JFrame {
         pnDebug.setVisible(false);
     }
 
+    public void clear() {
+        clearTokens();
+        clearErrors();
+        clearStacks();
+        clearIdentifiers();
+    }
+
     public void setErrors(ArrayList<String[]> tokens) {
 
         if (tokens.isEmpty()) {
@@ -141,10 +148,11 @@ public class Editor extends javax.swing.JFrame {
         }
 
         for (int i = 0; i < tokens.size(); i++) {
-            if(tokens.get(i).length > 2)
+            if (tokens.get(i).length > 2) {
                 txaErrors.setText("Linha: " + tokens.get(i)[0] + " -> " + tokens.get(i)[1]);
-            else
+            } else {
                 txaErrors.setText("Semântico: " + tokens.get(i)[0]);
+            }
 
         }
 
@@ -246,7 +254,9 @@ public class Editor extends javax.swing.JFrame {
             this.setTitle("HAL - Analisador");
             unsaved = false;
         }
-    };
+    }
+
+    ;
     
     
     @SuppressWarnings("unchecked")
