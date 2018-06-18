@@ -4,8 +4,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
+import javax.swing.Icon;
 import javax.swing.JOptionPane;
 import net.unesc.hal.analysis.lexicon.Source;
 import net.unesc.hal.exceptions.EditorException;
@@ -48,7 +47,7 @@ public class EditorListener implements ActionListener {
                         + "\n\nDisciplina:"
                         + "\n- Compiladores 2018/1"
                         + "\n\nProfessor:"
-                        + "\n- Gilberto Vieira", "Sobre", JOptionPane.INFORMATION_MESSAGE);
+                        + "\n- Gilberto Vieira", "Sobre", JOptionPane.PLAIN_MESSAGE);
                 break;
             case Editor.SAVE:
                 ed.setPath(File.write(src.getCode(), ed, ed.getPath()));

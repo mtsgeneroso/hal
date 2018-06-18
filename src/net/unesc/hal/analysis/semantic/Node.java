@@ -33,8 +33,8 @@ public class Node {
         this.identifiers.add(id);
     }
     
-    public void getIdentifier(int value){
-        this.identifiers.get(value);
+    public Identifier getIdentifier(int value){
+        return this.identifiers.get(value);
     }
 
     public ArrayList<Node> getChildren() {

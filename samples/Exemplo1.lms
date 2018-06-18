@@ -5,7 +5,7 @@ var
     var 
         a :integer; 
     begin 
-        a:=200000;
+        a:=20000;
         readln(a); 
         if a=x then
             z:=z+x
@@ -24,6 +24,7 @@ begin
         z:=z+x+y; 
     writeln(z); 
 end.
+
 
 
 

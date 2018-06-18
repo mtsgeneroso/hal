@@ -187,7 +187,7 @@ public class Editor extends javax.swing.JFrame {
         this.addWindowListener(new WindowAdapter() {
             public void windowClosing(WindowEvent e) {
                 if (unsaved) {
-                    if (JOptionPane.showConfirmDialog(null, "Deseja salvar as alteraçãos antes de sair?", "Salvar alterações", JOptionPane.YES_NO_OPTION) == JOptionPane.OK_OPTION) {
+                    if (JOptionPane.showConfirmDialog(null, "Deseja salvar as alteraçãos antes de sair?", "Salvar alterações", JOptionPane.YES_NO_OPTION, JOptionPane.QUESTION_MESSAGE) == JOptionPane.OK_OPTION) {
                         btnSave.doClick();
                     };
                 }
@@ -197,7 +197,7 @@ public class Editor extends javax.swing.JFrame {
         );
         fa = new FiniteAutomaton(new HAL());
 
-        setIconImage(new ImageIcon(getClass().getResource("../resources/favicon.png")).getImage());
+        setIconImage(new ImageIcon(getClass().getResource("../resources/icon.png")).getImage());
 
         fieldEditor = new TextPanelHighLight();
         fieldEditor.setCaretColor(Color.WHITE);

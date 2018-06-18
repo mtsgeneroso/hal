@@ -24,6 +24,11 @@ public class Semantic {
 
     private Node tree;
     private Node currNode;
+    private String attrId;
+    private String lastId;
+    
+    private boolean isAttribution;
+    private boolean isArgument;
 
     public Semantic() {
         this.errors = new ArrayList<>();
@@ -31,6 +36,10 @@ public class Semantic {
         this.currNode = tree;
         this.currType = 0;
         this.currCategory = -1;
+        this.isAttribution = false;
+        this.isArgument = false;
+        this.attrId = null;
+        this.lastId = null;
     }
 
     public ArrayList<String[]> getErrors() {
@@ -51,59 +60,53 @@ public class Semantic {
         
         String line = item[0];
         Integer cod = new Integer(item[1]);
-        String token = item[2];
         String source = item[3];
 
-        //1, "program"
-        //2, "label"
-        //3, "const"
-        //4, "var"
-        //5, "procedure"
-        //6, "begin"
-        //7, "end"
-        //8, "integer"
-        //9, "array"
-        //10, "of"
-        //11, "call"
-        //12, "goto"
-        //13, "if"
-        //14, "then"
-        //15, "else"
-        //16, "while"
-        //17, "do"
-        //18, "repeat"
-        //19, "until"
-        //20, "readln"
-        //21, "writeln"
-        //22, "or"
-        //23, "and"
-        //24, "not"
-        //27, "for"
-        //28, "to"
-        //29, "case"
         switch (cod) {
             case 2:
+                // Label
                 currCategory = CATEGORY_LABEL;
                 break;
             case 3:
+                // Constant
                 currCategory = CATEGORY_CONSTANT;
                 break;
             case 4:
+                // Var
                 currCategory = CATEGORY_VARIABLE;
                 break;
             case 5:
+                // Procedure
                 currCategory = CATEGORY_PROCEDURE;
                 break;
             case 6:
+                // Begin
                 currCategory = 0;
                 break;
             case 7:
+                // End
                 if (currNode.getParent() != null) {
                     currNode = currNode.getParent();
                 }
                 break;
             case 25:
+                // Identifier
+                lastId = source;
                 handleIdentifier(line, source);
+                break;
+            case 38:
+                // :=
+                if(currCategory == 0){
+                    attrId = lastId;
+                    isAttribution = true;
+                }
+                break;
+            case 47:
+                // Ponto e vírgula
+                if(currCategory == 0){
+                    isAttribution = false;
+                    isArgument = false;
+                }
                 break;
         }
 
@@ -113,7 +116,7 @@ public class Semantic {
         switch (currCategory) {
             case -1:
                 // Nome do programa
-                return;
+                break;
             case CATEGORY_PROCEDURE:
                 if (addProcedure(source) == -1) {
                     addError("Linha ->" + line + ": A procedure " + source + " já foi declarada");
@@ -144,10 +147,47 @@ public class Semantic {
             default:
                 if (!anyMatchDeclaration(source, currNode)) {
                     addError("Linha ->" + line + ": O identificador " + source + " não foi declarado");
+                    break;
                 }
+                if(isAttribution && attrId != null && getIdentifierType(attrId, currNode) != getIdentifierType(source, currNode)){
+                    addError("Linha ->" + line + ": A atribuição de valor (" + source + ") para o identificador " + attrId + " é incompatível com o seu tipo");
+                    break;
+                }
+                if(anyMatchProcedure(source)){
+                    attrId = source;
+                    isArgument = true;
+                    break;
+                }
+                if(isArgument && getIdentifierType(source, currNode) != TYPE_INTEGER){
+                    addError("Linha ->" + line + ": O argumento (" + source + ") é incompatível com a procedure " + attrId);
+                    break;
+                }
+                
+                
         }
     }
 
+    private int getIdentifierType(String name, Node n){
+
+        for (Node p : n.getChildren()) {
+            if (p.isProcedure() && p.getName().toUpperCase().equals(name.toUpperCase())) {
+                return -1;
+            }
+        }
+
+        for (Identifier i : n.getIdentifiers()) {
+            if (i.getName().toUpperCase().equals(name.toUpperCase())) {
+                return i.getType();
+            }
+        }
+
+        if (n.getParent() != null) {
+            return getIdentifierType(name, n.getParent());
+        }
+
+        return -1;
+    }
+    
     private int addIdentifier(String name, int category, int type) {
         if (anyMatchIdentifier(name)) {
             return -1;
@@ -272,7 +312,7 @@ public class Semantic {
             case CATEGORY_CONSTANT:
                 return "Constante";
             case CATEGORY_LABEL:
-                return "Label";
+                return "Rótulo";
             case CATEGORY_PARAMETER:
                 return "Parâmetro";
             case CATEGORY_PROCEDURE:

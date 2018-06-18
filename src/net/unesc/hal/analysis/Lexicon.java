@@ -200,8 +200,6 @@ public class Lexicon {
                             is_comment_loop = false;
                             cur_char = chars.get(++car);
                             buffer.clear();
-                        } else {
-                            System.out.println(parseBuffer(buffer) + cur_char);
                         }
                     }
 
